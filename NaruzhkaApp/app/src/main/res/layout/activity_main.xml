@@ -122,6 +122,31 @@
                     android:textColor="@color/black"
                     android:background="@color/white"
                     android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    />
+                <TextView
+                    android:id="@+id/saveFile"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:text="Сохранить"
+                    android:textAlignment="center"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/black"
+                    android:background="@color/white"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/openFile"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:text="Открыть"
+                    android:textAlignment="center"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/black"
+                    android:background="@color/white"
+                    android:layout_marginLeft="5dp"
                     />
 
             </GridLayout>
@@ -241,6 +266,16 @@
                                 android:text="Мощность:"/>
                             <EditText
                                 android:id="@+id/LampPowerEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Светильников:"/>
+                            <EditText
+                                android:id="@+id/LampAmountEdit"
                                 android:textSize="10sp"
                                 android:layout_marginLeft="5dp"
                                 android:layout_width="70dp"

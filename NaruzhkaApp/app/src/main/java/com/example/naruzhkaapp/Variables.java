@@ -14,6 +14,8 @@ import com.yandex.mapkit.mapview.MapView;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 public class Variables {
@@ -26,7 +28,10 @@ public class Variables {
     public static EditText LampAdressEdit=null;     //Поле ввода адреса светильнкиа
     public static EditText LampCommentsEdit = null;  //Поле ввода комментариев к светильнику
     public static EditText TPAdressEdit = null;         //Поле адреса подстанции
+    public static EditText LampAmountEdit=null;         //Количество светильников на столбе
     public static TextView TPLampsText = null;          //Поле отображение количества светильников подстанции
+    public static TextView saveFile = null;             //Кнопка сохранения файла
+    public static TextView openFile=null;
     public static boolean addTPFlag=false;          //Флаг добавления подстанции
     public static boolean addLampFlag = false;          //Флаг добавления светильника
     public static Activity activity;                    //Activity
@@ -43,6 +48,8 @@ public class Variables {
     public static TextView currentTPFolder=null;            //Текущая активная вкладка с подстанцией
     public static MapView mapview;              //Карта
     public static Vector<TP> tpList = new Vector<TP>();         //Список подстанций
+    public static String filePath="";
+    public static String folderPath="/storage/emulated/0/Documents";
 
     //Массив цветов для подстанций и светильников
     public static int[] colors = {Color.BLACK,Color.GREEN,Color.BLUE,Color.GRAY,Color.DKGRAY,Color.YELLOW,Color.CYAN,Color.LTGRAY,Color.MAGENTA};
@@ -66,8 +73,25 @@ public class Variables {
         spinTypes = activity.findViewById(R.id.spinTypes);
         removeLamp = activity.findViewById(R.id.removeLamp);
         removeTpFromList = activity.findViewById(R.id.removeTPTFromList);
+        saveFile = activity.findViewById(R.id.saveFile);
+        LampAmountEdit = activity.findViewById(R.id.LampAmountEdit);
+        openFile = activity.findViewById(R.id.openFile);
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, lampTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinTypes.setAdapter(adapter);
+    }
+
+
+    public static String getCurrentTimeStamp(){
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH;mm;ss");
+            String currentDateTime = dateFormat.format(new Date()); // Find todays date
+
+            return currentDateTime;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return null;
+        }
     }
 }

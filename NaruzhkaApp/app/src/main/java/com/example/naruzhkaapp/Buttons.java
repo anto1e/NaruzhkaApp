@@ -2,6 +2,7 @@ package com.example.naruzhkaapp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,9 +12,39 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.IOException;
 
 public class Buttons {
     public static void initBtns(){              //Инициализация кнопок
+
+
+        Variables.openFile.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Intent intent = new Intent()
+                        .setType("*/*")
+                        .setAction(Intent.ACTION_GET_CONTENT);
+                Variables.activity.startActivityForResult(Intent.createChooser(intent, "Select a file"), 123);
+                return false;
+            }
+        });
+
+        Variables.saveFile.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                try {
+                    FileParser.saveFile("");
+                    Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
+                        Toast.makeText(Variables.activity.getApplicationContext(), "Файл сохранен!", Toast.LENGTH_SHORT).show();
+                    });
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                return false;
+            }
+        });
 
         Variables.addLamp.setOnTouchListener(new View.OnTouchListener() {           //Обработка нажатия на кнопку добавления светильника
             @Override
@@ -126,51 +157,7 @@ public class Buttons {
                 return false;
             }
         });
-    }
 
-    private static void disableAddLamp(){       //Деактивация функции добавления светильников
-        Variables.addLampFlag=false;            //Сброс флага
-        Variables.addLamp.setBackgroundColor(Color.WHITE);          //Сброс цвета кнопки
-    }
-    private static void disableRemoveLamp(){       //Деактивация функции добавления светильников
-        Variables.removeLampFlag=false;            //Сброс флага
-        Variables.removeLamp.setBackgroundColor(Color.WHITE);          //Сброс цвета кнопки
-    }
-
-
-    private static void addTPToList(String name){       //Функция добавления панели подстанции в список
-        TextView txt = new TextView(Variables.activity);        //Создание текстового поля
-        txt.setLayoutParams(new ViewGroup.LayoutParams(180, 40));       //Задание размеров
-        txt.setText(name);      //Задание текста
-        txt.setTextSize(20);        //Задание размера текста
-        txt.setBackgroundColor(Color.RED);      //Установка цвета панели подстанции
-        if (Variables.currentTPFolder!=null){       //Если была предыдущая активаня подстаниция - сбрасываем ее цвет
-            Variables.currentTPFolder.setBackgroundColor(Color.WHITE);
-        }
-        Variables.currentTP.textView = txt;     //Установка созданной подстанции - текущей
-        Variables.currentTPFolder=txt;          //Установка созданной панели подстанции - текущей
-        txt.setOnTouchListener(new View.OnTouchListener() {     //Слушатель нажатий на панель подстанции
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Methods.disactiveLamp();
-                if (Variables.currentTPFolder!=null){       //Если была предыдущая активная подстанция
-                    Variables.currentTPFolder.setBackgroundColor(Color.WHITE);      //Сброс цвета панели предыдущей активной подстанции
-                }
-                Variables.currentTPFolder = (TextView) v;       //Установка созданной панели подстанции - текущей
-                v.setBackgroundColor(Color.RED);                //Установка цвета панели подстанции
-                for (TP tp:Variables.tpList){           //Поиск подстанции по нажатию на панель подстанции
-                    if (tp.textView == v){
-                        Variables.currentTP = tp;
-                        break;
-                    }
-                }
-                Methods.showCurrentTPInfo();
-                return false;
-            }
-        });
-        Variables.activity.runOnUiThread(() -> {
-            Variables.TPList.addView(txt);      //Добавление панели подстанции в список панелей подстанции
-        });
 
         Variables.TPNameEdit.addTextChangedListener(new TextWatcher() {     //Слушатель на изменение названия подстанции
             @Override
@@ -263,6 +250,28 @@ public class Buttons {
             public void afterTextChanged(Editable s) {
                 if (Variables.currentLamp!=null){
                     Variables.currentLamp.power= String.valueOf(Variables.LampPowerEdit.getText());
+                }
+            }
+        });
+
+        Variables.LampAmountEdit.addTextChangedListener(new TextWatcher() {     //Слушатель на изменение количества светильников на столбе
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.currentLamp!=null){
+                    try {
+                        Variables.currentLamp.lampAmount= Integer.parseInt(String.valueOf(Variables.LampAmountEdit.getText()));
+                    }catch (Exception ex){
+
+                    }
                 }
             }
         });
@@ -366,7 +375,83 @@ public class Buttons {
             }
 
         });
+    }
 
+    private static void disableAddLamp(){       //Деактивация функции добавления светильников
+        Variables.addLampFlag=false;            //Сброс флага
+        Variables.addLamp.setBackgroundColor(Color.WHITE);          //Сброс цвета кнопки
+    }
+    private static void disableRemoveLamp(){       //Деактивация функции добавления светильников
+        Variables.removeLampFlag=false;            //Сброс флага
+        Variables.removeLamp.setBackgroundColor(Color.WHITE);          //Сброс цвета кнопки
+    }
+
+
+    static void addTPToList(String name){       //Функция добавления панели подстанции в список
+        TextView txt = new TextView(Variables.activity);        //Создание текстового поля
+        txt.setLayoutParams(new ViewGroup.LayoutParams(180, 40));       //Задание размеров
+        txt.setText(name);      //Задание текста
+        txt.setTextSize(20);        //Задание размера текста
+        txt.setBackgroundColor(Color.RED);      //Установка цвета панели подстанции
+        if (Variables.currentTPFolder!=null){       //Если была предыдущая активаня подстаниция - сбрасываем ее цвет
+            Variables.currentTPFolder.setBackgroundColor(Color.WHITE);
+        }
+        Variables.currentTP.textView = txt;     //Установка созданной подстанции - текущей
+        Variables.currentTPFolder=txt;          //Установка созданной панели подстанции - текущей
+        txt.setOnTouchListener(new View.OnTouchListener() {     //Слушатель нажатий на панель подстанции
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Methods.disactiveLamp();
+                if (Variables.currentTPFolder!=null){       //Если была предыдущая активная подстанция
+                    Variables.currentTPFolder.setBackgroundColor(Color.WHITE);      //Сброс цвета панели предыдущей активной подстанции
+                }
+                Variables.currentTPFolder = (TextView) v;       //Установка созданной панели подстанции - текущей
+                v.setBackgroundColor(Color.RED);                //Установка цвета панели подстанции
+                for (TP tp:Variables.tpList){           //Поиск подстанции по нажатию на панель подстанции
+                    if (tp.textView == v){
+                        Variables.currentTP = tp;
+                        break;
+                    }
+                }
+                Methods.showCurrentTPInfo();
+                return false;
+            }
+        });
+        Variables.activity.runOnUiThread(() -> {
+            Variables.TPList.addView(txt);      //Добавление панели подстанции в список панелей подстанции
+        });
+    }
+
+
+    static void addTPToListFromFile(TP tp){       //Функция добавления панели подстанции в список
+        TextView txt = new TextView(Variables.activity);        //Создание текстового поля
+        txt.setLayoutParams(new ViewGroup.LayoutParams(180, 40));       //Задание размеров
+        txt.setText(tp.name);      //Задание текста
+        txt.setTextSize(20);        //Задание размера текста
+        txt.setBackgroundColor(Color.WHITE);
+        tp.textView = txt;     //Установка созданной подстанции - текущей
+        txt.setOnTouchListener(new View.OnTouchListener() {     //Слушатель нажатий на панель подстанции
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Methods.disactiveLamp();
+                if (Variables.currentTPFolder!=null){       //Если была предыдущая активная подстанция
+                    Variables.currentTPFolder.setBackgroundColor(Color.WHITE);      //Сброс цвета панели предыдущей активной подстанции
+                }
+                Variables.currentTPFolder = (TextView) v;       //Установка созданной панели подстанции - текущей
+                v.setBackgroundColor(Color.RED);                //Установка цвета панели подстанции
+                for (TP tp:Variables.tpList){           //Поиск подстанции по нажатию на панель подстанции
+                    if (tp.textView == v){
+                        Variables.currentTP = tp;
+                        break;
+                    }
+                }
+                Methods.showCurrentTPInfo();
+                return false;
+            }
+        });
+        Variables.activity.runOnUiThread(() -> {
+            Variables.TPList.addView(txt);      //Добавление панели подстанции в список панелей подстанции
+        });
     }
 
 }

@@ -83,6 +83,25 @@ public class Methods {
         return bitmap;
     }
 
+    public static Bitmap drawTPWithColor(String number,int color) {                //Рисуем подстанцию
+        int picSize = 50;               //Размер значка подстанции
+        Bitmap bitmap = Bitmap.createBitmap(picSize, picSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        // отрисовка плейсмарка
+        Paint paint = new Paint();
+        paint.setColor(color);          //Цвет значка
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(0,0,picSize,picSize,paint);         //Отрисовка квадрата
+        // отрисовка текста
+        paint.setColor(Color.WHITE);
+        paint.setAntiAlias(true);
+        paint.setTextSize(15);              //Размер текста
+        paint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(number, picSize / 2,
+                picSize / 2 - ((paint.descent() + paint.ascent()) / 2), paint);         //Отрисовка текста внутри квадрата
+        return bitmap;
+    }
+
 
     public static void getCity(Lamp lamp,TP tp, double latitude, double longitude) {          //Функция получение адреса по ширине и долготе
         Geocoder geocoder = new Geocoder(Variables.activity, Locale.getDefault());
@@ -221,12 +240,15 @@ public class Methods {
         displayLampsTPAmount(Variables.currentTP);
     }
 
-    public static void showCurrentLampInfo(){
-        Variables.LampTypeEdit.setText(Variables.currentLamp.type);
+    public static void showCurrentLampInfo() {
+        if (Variables.currentLamp != null){
+            Variables.LampTypeEdit.setText(Variables.currentLamp.type);
         Variables.LampPowerEdit.setText(Variables.currentLamp.power);
         Variables.LampMontageEdit.setText(Variables.currentLamp.montage);
         Variables.LampAdressEdit.setText(Variables.currentLamp.adress);
         Variables.LampCommentsEdit.setText(Variables.currentLamp.comments);
+        Variables.LampAmountEdit.setText(String.valueOf(Variables.currentLamp.lampAmount));
+    }
     }
 
     public static void setCurrentLamp(Lamp lamp){
@@ -257,6 +279,53 @@ public class Methods {
             Variables.currentLamp.placemark = placemark;
             placemark.setUserData("LAMP%" + Variables.currentLamp.toString());        //Сохранение данных в метку
             Variables.currentLamp = null;
+        }
+    }
+
+    public static void clearAll() {
+        for (TP tp : Variables.tpList) {
+            for (Lamp lamp : tp.lamps) {
+                Methods.removeLamp(lamp);
+            }
+            tp.lamps.clear();
+            tp.placemark.getParent().remove(tp.placemark);
+            Variables.tpList.remove(tp);
+            Variables.activity.runOnUiThread(() -> {
+                Variables.TPList.removeView(tp.textView);
+            });
+            Variables.currentTPFolder = null;
+            Variables.currentTP = null;
+            Variables.currentLamp = null;
+        }
+        Variables.tpList.clear();
+    }
+
+    public static void showTpsAndLamps(){
+        for (TP tp:Variables.tpList){
+            Point mappoint= new Point(tp.latitude, tp.longtitude);   //Создание точки на карте
+            MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();
+            pointCollection.addTapListener(Methods.placemarkTapListener);
+            PlacemarkMapObject placemark = pointCollection.addPlacemark(mappoint,
+                    ImageProvider.fromBitmap(Methods.drawTPWithColor(tp.name,tp.color)));        //Создание и отрисовка метки
+            tp.placemark = placemark;
+            placemark.setUserData("TP%"+tp.toString());        //Сохранение данных в метку
+            Buttons.addTPToListFromFile(tp);          //Добавление панели подстанции в список
+            Variables.currentColor++;               //Инкремент указателя на текущий цвет
+            if (Variables.currentColor > Variables.colors.length - 1) {     //Если указатель вышел за пределы массива с цветами
+                Variables.currentColor = 0;     //Сброс указателя на изначальную позицию
+            }
+
+
+            for (Lamp lamp:tp.lamps){
+                mappoint= new Point(lamp.latitude, lamp.longtitude);   //Создание точки на карте
+                tp.currentStolbCount++;
+                MapObjectCollection pointCollection1 = Variables.mapview.getMap().getMapObjects().addCollection();
+                pointCollection1.addTapListener(Methods.placemarkTapListener);
+                PlacemarkMapObject placemark1 =  pointCollection1.addPlacemark(mappoint,
+                        ImageProvider.fromBitmap(Methods.drawLamp(String.valueOf(lamp.stolbNumber),tp.color)));
+                lamp.placemark = placemark1;
+                placemark1.setUserData("LAMP%"+lamp.toString());        //Сохранение данных в метку
+            }
         }
     }
 }

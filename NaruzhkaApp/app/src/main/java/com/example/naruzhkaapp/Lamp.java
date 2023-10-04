@@ -12,9 +12,10 @@ public class Lamp {
     public String adress="";        //Адрес местоположения светильника;
     public String comments="";      //Комментарии к светильнику;
     public String montage="";           //Тип монтажа светильника
+    public int lampAmount = 1;          //Количество светильников на столбе
     PlacemarkMapObject placemark = null;        //Иконка на карте
 
-    public Lamp(int typeSelection,String type,String power,double latitude, double longtitude,String adress,String comments,PlacemarkMapObject placemark,int stolbNumber,String montage){
+    public Lamp(int typeSelection,String type,String power,double latitude, double longtitude,String adress,String comments,PlacemarkMapObject placemark,int stolbNumber,String montage,int lampAmount){
         this.typeSelection = typeSelection;
         this.type=type;
         this.power = power;
@@ -25,6 +26,7 @@ public class Lamp {
         this.placemark = placemark;
         this.stolbNumber = stolbNumber;
         this.montage = montage;
+        this.lampAmount = lampAmount;
     }
 
     public Lamp() {

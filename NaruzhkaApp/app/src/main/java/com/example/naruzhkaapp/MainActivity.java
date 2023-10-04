@@ -3,6 +3,7 @@ package com.example.naruzhkaapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -23,7 +24,10 @@ import com.yandex.mapkit.mapview.MapView;
 import com.yandex.mapkit.user_location.UserLocationLayer;
 import com.yandex.runtime.image.ImageProvider;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
+    private static final int PERMISSION_STORAGE = 101;
     private UserLocationLayer userLocationLayer;    //Метка местоположения пользователя
 
     @Override
@@ -34,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         MapKitFactory.initialize(this);             //Инициализация Яндекс-карт
         setContentView(R.layout.activity_main);
         Variables.activity = this;
+        //if (PermissionUtils.hasPermissions(MainActivity.this)) return;
+        //PermissionUtils.requestPermissions(MainActivity.this, PERMISSION_STORAGE);
         Variables.init();           //Инициализация переменных
         Buttons.initBtns();         //Инициализация кнопок
         Variables.mapview = (MapView)findViewById(R.id.map);        //Отображение карты на экране
@@ -72,5 +78,14 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         MapKitFactory.getInstance().onStart();
         Variables.mapview.onStart();
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) { //После выбора пользователем файла путем диалогового окна
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 123 && resultCode == RESULT_OK) {        //Если файл открылся
+            Variables.filePath = FileHelper.getRealPathFromURI(this, data.getData());       //Сохраняем путь к файлу
+            FileParser.loadFile(Variables.filePath);          //Парсим файл
+        }
     }
     }
