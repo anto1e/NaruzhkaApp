@@ -22,11 +22,21 @@
             android:background="@drawable/toolbarborder">
 
             <ImageView
-                android:id="@+id/addTPToList"
+                android:id="@+id/removeTPTFromList"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="0dp"
+                android:layout_marginLeft="10dp"
+                android:background="@color/white"
+                android:src="@drawable/delete" />
+
+            <ImageView
+                android:id="@+id/addTPToList"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="-30dp"
                 android:layout_marginLeft="50dp"
                 android:background="@color/white"
                 android:src="@drawable/addtp" />
@@ -73,48 +83,204 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/secondToolbar"
             android:backgroundTint="@color/bc_layout"
-            android:layout_width="150dp"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             android:background="@drawable/toolbarborder"
             tools:layout_editor_absoluteY="0dp">
+
             <!--Здесь будут располагаться кнопки-->
             <GridLayout
                 app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/toolsGrid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:columnCount="4"
+                android:columnCount="1"
                 android:orientation="horizontal"
                 tools:ignore="MissingConstraints">
 
                 <TextView
                     android:id="@+id/addLamp"
-                    android:layout_width="30dp"
+                    android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:text="СВ"
+                    android:text="Добавить светильник"
                     android:textAlignment="center"
                     android:paddingTop="5dp"
                     android:textColor="@color/black"
                     android:background="@color/white"
                     android:layout_marginLeft="5dp"
-
+                    android:layout_marginBottom="5dp"
+                    />
+                <TextView
+                    android:id="@+id/removeLamp"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:text="Удалить светильник"
+                    android:textAlignment="center"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/black"
+                    android:background="@color/white"
+                    android:layout_marginLeft="5dp"
                     />
 
             </GridLayout>
+
 
             <ScrollView
                 android:id="@+id/globalScroll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolsGrid">
+                app:layout_constraintTop_toBottomOf="@+id/toolsGrid"
+                app:layout_constraintStart_toStartOf="parent">
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
+                    android:paddingBottom="200dp"
                     android:layout_height="wrap_content">
+                    <TextView
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:id="@+id/infoTpText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Информация о подстанции"
+                        android:background="@color/teal_200" />
+                    <LinearLayout
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/infoTpText"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/white">
+                        <GridLayout
+                            android:id="@+id/TPInfoGrid"
+                            android:columnCount="2"
+                            android:layout_marginBottom="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Название:"/>
+                            <EditText
+                                android:id="@+id/TPNameEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Адрес:"/>
+                            <EditText
+                                android:id="@+id/TPAdressEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Комментарии:"/>
+                            <EditText
+                                android:id="@+id/TPCommentsEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Светильников:"/>
+                            <TextView
+                                android:id="@+id/TPLampsText"
+                                android:layout_marginLeft="5dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""/>
+                        </GridLayout>
+
+                        <TextView
+                            android:id="@+id/infoLampText"
+                            app:layout_constraintTop_toBottomOf="@+id/TPInfoGrid"
+                            android:layout_width="180dp"
+                            android:layout_height="wrap_content"
+                            android:text="Информация о светильнике"
+                            android:background="@color/teal_200" />
+                        <GridLayout
+                            android:columnCount="2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Тип"/>
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/spinTypes"
+                                android:layout_marginLeft="-20dp"
+                                android:layout_marginTop="0dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Тип:"/>
+                            <EditText
+                                android:id="@+id/LampTypeEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Мощность:"/>
+                            <EditText
+                                android:id="@+id/LampPowerEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Монтаж:"/>
+                            <EditText
+                                android:id="@+id/LampMontageEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Адрес:"/>
+                            <EditText
+                                android:id="@+id/LampAdressEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Комментарии:"/>
+                            <EditText
+                                android:id="@+id/LampCommentsEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                        </GridLayout>
+
+                    </LinearLayout>
+
+
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>

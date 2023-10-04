@@ -23,20 +23,41 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import kotlin.reflect.KVariance;
+
 public class Methods {
-    public static Bitmap drawLamp(String number) {          //Отрисовка значка светильника
+    public static Bitmap drawLamp(String number,int color) {          //Отрисовка значка светильника
         int picSize = 40;           //Размер значка
         Bitmap bitmap = Bitmap.createBitmap(picSize, picSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         // отрисовка плейсмарка
         Paint paint = new Paint();
-        paint.setColor(Color.DKGRAY);               //Цвет значка
+        paint.setColor(color);               //Цвет значка
         paint.setStyle(Paint.Style.FILL);
         canvas.drawCircle(picSize / 2, picSize / 2, picSize / 2, paint);        //Отрисовка круга
         // отрисовка текста
         paint.setColor(Color.WHITE);
         paint.setAntiAlias(true);
-        paint.setTextSize(20);          //Размер текста
+        paint.setTextSize(10);          //Размер текста
+        paint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(number, picSize / 2,
+                picSize / 2 - ((paint.descent() + paint.ascent()) / 2), paint);             //Отрисовка текста внутри круга
+        return bitmap;
+    }
+
+    public static Bitmap drawCurrentLamp(String number) {          //Отрисовка значка светильника
+        int picSize = 40;           //Размер значка
+        Bitmap bitmap = Bitmap.createBitmap(picSize, picSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        // отрисовка плейсмарка
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);               //Цвет значка
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(picSize / 2, picSize / 2, picSize / 2, paint);        //Отрисовка круга
+        // отрисовка текста
+        paint.setColor(Color.WHITE);
+        paint.setAntiAlias(true);
+        paint.setTextSize(10);          //Размер текста
         paint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(number, picSize / 2,
                 picSize / 2 - ((paint.descent() + paint.ascent()) / 2), paint);             //Отрисовка текста внутри круга
@@ -63,7 +84,7 @@ public class Methods {
     }
 
 
-    public static void getCity(TP tp, double latitude, double longitude) {          //Функция получение адреса по ширине и долготе
+    public static void getCity(Lamp lamp,TP tp, double latitude, double longitude) {          //Функция получение адреса по ширине и долготе
         Geocoder geocoder = new Geocoder(Variables.activity, Locale.getDefault());
         String adress;
         try {
@@ -80,7 +101,11 @@ public class Methods {
             adress = "Error";
         }
         if (!adress.equals("Error")){
-            tp.adress = adress;     //Если адрес получен - задание адреса подстанции
+            if (lamp == null && tp!=null) {
+                tp.adress = adress;     //Если адрес получен - задание адреса подстанции
+            }else if (tp==null && lamp!=null){
+                lamp.adress = adress;
+            }
         }
     }
 
@@ -90,18 +115,49 @@ public class Methods {
         public boolean onMapObjectTap(@NonNull MapObject mapObject, @NonNull Point point) {
             String data = mapObject.getUserData().toString();
             String[] split_str = data.split("%");
-            if (split_str[0].equals("TP")) {        //Если нажатие на подстанцию - ищем подстанцию в списке
-                for (TP tp : Variables.tpList) {
-                    if (split_str[1].equals(tp.toString())) {       //Выводим информацию найденной подстанции
-                        Toast toast = Toast.makeText(Variables.activity,
-                                tp.name, Toast.LENGTH_SHORT);
-                        toast.show();
+            if (Variables.currentTP!=null){
+            if (!Variables.removeLampFlag) {            //Если простое нажатие - выводим информацию
+                if (split_str[0].equals("TP")) {        //Если нажатие на подстанцию - ищем подстанцию в списке
+                    for (TP tp : Variables.tpList) {
+                        if (split_str[1].equals(tp.toString())) {       //Выводим информацию найденной подстанции
+                            Toast toast = Toast.makeText(Variables.activity,
+                                    tp.name, Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                    }
+                } else if (split_str[0].equals("LAMP")) {
+                    for (Lamp lamp : Variables.currentTP.lamps) {
+                        if (split_str[1].equals(lamp.toString())) {
+                            makeLampActive(lamp);
+                            showCurrentLampInfo();
+                        }
+                    }
+                }
+            } else {          //Если активировано удаление - удаляем светильник
+                if (split_str[0].equals("LAMP")) {
+                    Lamp lampToDelete = null;
+                    for (Lamp lamp : Variables.currentTP.lamps) {
+                        if (split_str[1].equals(lamp.toString())) {
+                            setCurrentLamp(null);
+                            removeLamp(lamp);
+                            lampToDelete = lamp;
+                        }
+                    }
+                    if (lampToDelete != null) {
+                        Variables.currentTP.lamps.remove(lampToDelete);
+                        showCurrentTPInfo();
                     }
                 }
             }
+        }
             return false;
         }
     };
+
+    public static void removeLamp(Lamp lamp){               //Удаление метки с экрана
+        lamp.placemark.getParent().remove(lamp.placemark);
+        //Variables.currentTP.lamps.remove(lamp);
+    }
 
     public static final InputListener inputListener = new InputListener() {     //Обработка надажатий на план
         @Override
@@ -111,20 +167,37 @@ public class Methods {
             if (Variables.addTPFlag) {      //Если активен флаг добавления подстации
                 Variables.currentTP.latitude = point.getLatitude();     //Задание широты
                 Variables.currentTP.longtitude = point.getLongitude();      //Задание долготы
-                Methods.getCity(Variables.currentTP,point.getLatitude(),point.getLongitude());      //Получение адреса подстанции
+                Methods.getCity(null,Variables.currentTP,point.getLatitude(),point.getLongitude());      //Получение адреса подстанции
 
                 MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();
                 pointCollection.addTapListener(Methods.placemarkTapListener);
                 PlacemarkMapObject placemark = pointCollection.addPlacemark(mappoint,
                         ImageProvider.fromBitmap(Methods.drawTP(Variables.currentTP.name)));        //Создание и отрисовка метки
+                Variables.currentTP.placemark = placemark;
                 placemark.setUserData("TP%"+Variables.currentTP.toString());        //Сохранение данных в метку
+                showCurrentTPInfo();
 
                 //////Сброс флагов//////
                 Variables.addTPFlag=false;
                 Variables.TPAdded=true;
             }else if (Variables.addLampFlag){           //Иначе, если активен флаг добавления светильников
-                Variables.mapview.getMap().getMapObjects().addPlacemark(mappoint,
-                        ImageProvider.fromBitmap(Methods.drawLamp(String.valueOf(0))));
+                Lamp lamp = new Lamp();         //Создание светильника
+                lamp.latitude = point.getLatitude();            //Широта местоположения светильника
+                lamp.longtitude = point.getLongitude();             //Долгота местоположения светильника
+                lamp.stolbNumber = Variables.currentTP.currentStolbCount;
+                Variables.currentTP.currentStolbCount++;
+                Methods.getCity(lamp,null, lamp.latitude, lamp.longtitude);         //Получение адреса светильника
+                Variables.currentTP.lamps.add(lamp);            //Добавление светильников к подстанции
+                MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();
+                pointCollection.addTapListener(Methods.placemarkTapListener);
+                PlacemarkMapObject placemark =  pointCollection.addPlacemark(mappoint,
+                        ImageProvider.fromBitmap(Methods.drawLamp(String.valueOf(lamp.stolbNumber),Variables.currentTP.color)));
+                lamp.placemark = placemark;
+                makeLampActive(lamp);
+                placemark.setUserData("LAMP%"+Variables.currentLamp.toString());        //Сохранение данных в метку
+                setCurrentLamp(lamp);
+                showCurrentLampInfo();
+                displayLampsTPAmount(Variables.currentTP);      //Отображение количества светильников текущей подстанции
             }
         }
 
@@ -135,4 +208,55 @@ public class Methods {
 // Do something.
     };
 
+    public static void displayLampsTPAmount(TP tp){         //Отображение количества светильников, привязанных к подстанции
+        int countLamps=0;
+        for (Lamp lamp:tp.lamps){
+            countLamps++;
+        }
+        Variables.TPLampsText.setText(String.valueOf(countLamps));
+    }
+    public static void showCurrentTPInfo(){         //Отображение тинформации по текущей подстанции
+        Variables.TPNameEdit.setText(Variables.currentTP.name);
+        Variables.TPAdressEdit.setText(Variables.currentTP.adress);
+        displayLampsTPAmount(Variables.currentTP);
+    }
+
+    public static void showCurrentLampInfo(){
+        Variables.LampTypeEdit.setText(Variables.currentLamp.type);
+        Variables.LampPowerEdit.setText(Variables.currentLamp.power);
+        Variables.LampMontageEdit.setText(Variables.currentLamp.montage);
+        Variables.LampAdressEdit.setText(Variables.currentLamp.adress);
+        Variables.LampCommentsEdit.setText(Variables.currentLamp.comments);
+    }
+
+    public static void setCurrentLamp(Lamp lamp){
+        Variables.currentLamp = lamp;
+    }
+
+    public static void makeLampActive(Lamp lamp){
+        disactiveLamp();
+        Point mappoint= new Point(lamp.latitude, lamp.longtitude);   //Создание точки на карте
+        lamp.placemark.getParent().remove(lamp.placemark);
+        MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();
+        pointCollection.addTapListener(Methods.placemarkTapListener);
+        PlacemarkMapObject placemark =  pointCollection.addPlacemark(mappoint,
+                ImageProvider.fromBitmap(Methods.drawCurrentLamp(String.valueOf(lamp.stolbNumber))));
+        lamp.placemark = placemark;
+        placemark.setUserData("LAMP%"+lamp.toString());        //Сохранение данных в метку
+        Variables.currentLamp=lamp;
+    }
+
+    public static void disactiveLamp(){
+        if (Variables.currentLamp!=null) {
+            Point mappoint = new Point(Variables.currentLamp.latitude, Variables.currentLamp.longtitude);   //Создание точки на карте
+            Variables.currentLamp.placemark.getParent().remove(Variables.currentLamp.placemark);
+            MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();
+            pointCollection.addTapListener(Methods.placemarkTapListener);
+            PlacemarkMapObject placemark = pointCollection.addPlacemark(mappoint,
+                    ImageProvider.fromBitmap(Methods.drawLamp(String.valueOf(Variables.currentLamp.stolbNumber), Variables.currentTP.color)));
+            Variables.currentLamp.placemark = placemark;
+            placemark.setUserData("LAMP%" + Variables.currentLamp.toString());        //Сохранение данных в метку
+            Variables.currentLamp = null;
+        }
+    }
 }

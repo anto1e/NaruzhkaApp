@@ -25,8 +25,6 @@ import com.yandex.runtime.image.ImageProvider;
 
 public class MainActivity extends AppCompatActivity {
     private UserLocationLayer userLocationLayer;    //Метка местоположения пользователя
-    public int TPCount=0;
-    public int lampCount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
