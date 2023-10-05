@@ -2,6 +2,8 @@ package com.example.naruzhkaapp;
 
 import com.yandex.mapkit.map.PlacemarkMapObject;
 
+import java.util.Vector;
+
 public class Lamp {
     public int typeSelection=0;     //Тип выбранного светильника(Для выпадающего списка)
     public String type="";      //Тип светильника
@@ -13,9 +15,12 @@ public class Lamp {
     public String comments="";      //Комментарии к светильнику;
     public String montage="";           //Тип монтажа светильника
     public int lampAmount = 1;          //Количество светильников на столбе
+    public String lampHeight="0";
     PlacemarkMapObject placemark = null;        //Иконка на карте
 
-    public Lamp(int typeSelection,String type,String power,double latitude, double longtitude,String adress,String comments,PlacemarkMapObject placemark,int stolbNumber,String montage,int lampAmount){
+    Vector<String> photoPaths = new Vector<String>();       //Вектор путей к фотографиям комнаты
+
+    public Lamp(int typeSelection,String type,String power,double latitude, double longtitude,String adress,String comments,PlacemarkMapObject placemark,int stolbNumber,String montage,int lampAmount, String lampHeight){
         this.typeSelection = typeSelection;
         this.type=type;
         this.power = power;
@@ -27,6 +32,7 @@ public class Lamp {
         this.stolbNumber = stolbNumber;
         this.montage = montage;
         this.lampAmount = lampAmount;
+        this.lampHeight = lampHeight;
     }
 
     public Lamp() {

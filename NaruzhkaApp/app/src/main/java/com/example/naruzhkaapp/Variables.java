@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -34,6 +35,7 @@ public class Variables {
     public static EditText LampCommentsEdit = null;  //Поле ввода комментариев к светильнику
     public static EditText TPAdressEdit = null;         //Поле адреса подстанции
     public static EditText LampAmountEdit=null;         //Количество светильников на столбе
+    public static EditText LampHeightEdit=null;
     public static TextView TPLampsText = null;          //Поле отображение количества светильников подстанции
     public static TextView saveFile = null;             //Кнопка сохранения файла
     public static TextView openFile=null;
@@ -52,6 +54,11 @@ public class Variables {
     public static Lamp currentLamp=null;                    //Текущий выбранный светильник
     public static ImageView removeTpFromList=null;          //Кнопка удаления подстанции из списка
     public static TextView currentTPFolder=null;            //Текущая активная вкладка с подстанцией
+    public static ImageView takeTpPic = null;
+    public static ImageView takeLampPic=null;
+    public static GridLayout tpGrid=null;
+    public static GridLayout lampGrid=null;
+    public static boolean takePhotoFlag=false;
     public static MapView mapview;              //Карта
     public static Vector<TP> tpList = new Vector<TP>();         //Список подстанций
     public static String filePath="";
@@ -85,6 +92,11 @@ public class Variables {
         LampAmountEdit = activity.findViewById(R.id.LampAmountEdit);
         openFile = activity.findViewById(R.id.openFile);
         addPolylines = activity.findViewById(R.id.addPolylines);
+        LampHeightEdit = activity.findViewById(R.id.LampHeightEdit);
+        takeTpPic = activity.findViewById(R.id.takePicBtn);
+        takeLampPic = activity.findViewById(R.id.takePicLampBtn);
+        tpGrid = activity.findViewById(R.id.tpGrid);
+        lampGrid = activity.findViewById(R.id.lampGrid);
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, lampTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinTypes.setAdapter(adapter);

@@ -203,7 +203,7 @@
                             <EditText
                                 android:id="@+id/TPNameEdit"
                                 android:textSize="10sp"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="-45dp"
                                 android:layout_width="70dp"
                                 android:layout_height="wrap_content"/>
                             <TextView
@@ -213,7 +213,7 @@
                             <EditText
                                 android:id="@+id/TPAdressEdit"
                                 android:textSize="10sp"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="-45dp"
                                 android:layout_width="70dp"
                                 android:layout_height="wrap_content"/>
                             <TextView
@@ -223,7 +223,7 @@
                             <EditText
                                 android:id="@+id/TPCommentsEdit"
                                 android:textSize="10sp"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="-45dp"
                                 android:layout_width="70dp"
                                 android:layout_height="wrap_content"/>
                             <TextView
@@ -232,10 +232,35 @@
                                 android:text="Светильников:"/>
                             <TextView
                                 android:id="@+id/TPLampsText"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="-45dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""/>
+                            <Button
+                                android:visibility="invisible"
+                                android:id="@+id/submit1"
+                                android:layout_height="20dp"
+                                android:text="Подтвердить"
+                                android:textColor="@color/black"
+                                />
+                            <TextView/>
+                            <ImageView
+                                android:id="@+id/takePicBtn"
+                                android:layout_width="40dp"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:src="@drawable/camera"
+                                android:background="@drawable/txtviewborder"
+                                android:layout_height="40dp"/>
+                        </GridLayout>
+                        <GridLayout
+                            android:layout_below="@+id/roomGrid"
+                            android:id="@+id/tpGrid"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="3"
+                            android:useDefaultMargins="true"
+                            android:orientation="horizontal">
                         </GridLayout>
 
                         <TextView
@@ -246,6 +271,7 @@
                             android:text="Информация о светильнике"
                             android:background="@color/teal_200" />
                         <GridLayout
+                            android:id="@+id/gridLampInfo"
                             android:columnCount="2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
@@ -256,7 +282,7 @@
                             <Spinner
                                 android:verticalScrollbarPosition="right"
                                 android:id="@+id/spinTypes"
-                                android:layout_marginLeft="-20dp"
+                                android:layout_marginLeft="-70dp"
                                 android:layout_marginTop="0dp"
                                 android:layout_width="100dp"
                                 android:layout_height="30dp"
@@ -269,7 +295,7 @@
                             <EditText
                                 android:id="@+id/LampTypeEdit"
                                 android:textSize="10sp"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="-45dp"
                                 android:layout_width="70dp"
                                 android:layout_height="wrap_content"/>
                             <TextView
@@ -279,7 +305,17 @@
                             <EditText
                                 android:id="@+id/LampPowerEdit"
                                 android:textSize="10sp"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="-45dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Высота:"/>
+                            <EditText
+                                android:id="@+id/LampHeightEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="-45dp"
                                 android:layout_width="70dp"
                                 android:layout_height="wrap_content"/>
                             <TextView
@@ -289,7 +325,7 @@
                             <EditText
                                 android:id="@+id/LampAmountEdit"
                                 android:textSize="10sp"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="-45dp"
                                 android:layout_width="70dp"
                                 android:layout_height="wrap_content"/>
                             <TextView
@@ -299,7 +335,7 @@
                             <EditText
                                 android:id="@+id/LampMontageEdit"
                                 android:textSize="10sp"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="-45dp"
                                 android:layout_width="70dp"
                                 android:layout_height="wrap_content"/>
                             <TextView
@@ -309,7 +345,7 @@
                             <EditText
                                 android:id="@+id/LampAdressEdit"
                                 android:textSize="10sp"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="-45dp"
                                 android:layout_width="70dp"
                                 android:layout_height="wrap_content"/>
                             <TextView
@@ -319,9 +355,34 @@
                             <EditText
                                 android:id="@+id/LampCommentsEdit"
                                 android:textSize="10sp"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="-45dp"
                                 android:layout_width="70dp"
                                 android:layout_height="wrap_content"/>
+                            <Button
+                                android:visibility="invisible"
+                                android:id="@+id/submit"
+                                android:layout_height="20dp"
+                                android:text="Подтвердить"
+                                android:textColor="@color/black"
+                                />
+                            <TextView/>
+                            <ImageView
+                                android:id="@+id/takePicLampBtn"
+                                android:layout_width="40dp"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginBottom="5dp"
+                                android:src="@drawable/camera"
+                                android:background="@drawable/txtviewborder"
+                                android:layout_height="40dp"/>
+                        </GridLayout>
+                        <GridLayout
+                            android:layout_below="@+id/gridLampInfo"
+                            android:id="@+id/lampGrid"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="3"
+                            android:useDefaultMargins="true"
+                            android:orientation="horizontal">
                         </GridLayout>
 
                     </LinearLayout>

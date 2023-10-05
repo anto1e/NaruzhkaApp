@@ -18,6 +18,8 @@ public class TP {
     PlacemarkMapObject placemark = null;        //Иконка на карте
     public Vector<Lamp> lamps = new Vector<Lamp>();     //Список светильников, привязанных к подстанции
 
+    Vector<String> photoPaths = new Vector<String>();
+
 
     public TP(String name,String adress, float latitude, float longtitude, String comments, int color,TextView textView,PlacemarkMapObject placemark){
         this.name = name;

@@ -1,11 +1,18 @@
 package com.example.naruzhkaapp;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
+import android.util.TypedValue;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,6 +28,7 @@ import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.map.PolylineMapObject;
 import com.yandex.runtime.image.ImageProvider;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -246,6 +254,7 @@ public class Methods {
         Variables.TPNameEdit.setText(Variables.currentTP.name);
         Variables.TPAdressEdit.setText(Variables.currentTP.adress);
         displayLampsTPAmount(Variables.currentTP);
+        showAllPhotos(Variables.currentTP);
     }
 
     public static void showCurrentLampInfo() {
@@ -256,6 +265,8 @@ public class Methods {
         Variables.LampAdressEdit.setText(Variables.currentLamp.adress);
         Variables.LampCommentsEdit.setText(Variables.currentLamp.comments);
         Variables.LampAmountEdit.setText(String.valueOf(Variables.currentLamp.lampAmount));
+        Variables.LampHeightEdit.setText(String.valueOf(Variables.currentLamp.lampHeight));
+        showLampsAllPhotos(Variables.currentLamp);
     }
     }
 
@@ -364,6 +375,33 @@ Variables.mapview.getMap().getMapObjects().addCollection().addPolyline(polyline)
             Variables.polylines.add(polyline1);
             polyline1.setStrokeColor(tp.color);
             polyline1.setStrokeWidth(3);
+        }
+    }
+
+    public static void createNewPhotoRoom(File f, boolean type){     //Создание новой фотографии комнаты(светильника)
+        ImageView view = new ImageView(Variables.activity);
+        view.setLayoutParams(new ViewGroup.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, Variables.activity.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, Variables.activity.getResources().getDisplayMetrics())));
+        //lay.setBackgroundResource(R.drawable.txtviewborder);
+        view.setImageURI(Uri.fromFile(f));
+        if (type){      //Если сфотографирована комната
+            Variables.tpGrid.addView(view);}
+        else{   //иначе - светильник
+            Variables.lampGrid.addView(view);
+        }
+    }
+
+    public static void showAllPhotos(TP tp){            //Отображение всех фотографий помещения
+        Variables.tpGrid.removeAllViews();
+        for (String str:tp.photoPaths){
+            File f = new File(str);
+            Methods.createNewPhotoRoom(f,true);
+        }
+    }
+    public static void showLampsAllPhotos(Lamp lamp){       //Отображение всех фотографий светильника
+        Variables.lampGrid.removeAllViews();
+        for (String str:lamp.photoPaths){
+            File f = new File(str);
+            Methods.createNewPhotoRoom(f,false);
         }
     }
 }

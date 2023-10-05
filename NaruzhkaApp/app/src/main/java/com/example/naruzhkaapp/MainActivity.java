@@ -1,12 +1,17 @@
 package com.example.naruzhkaapp;
 
+import static com.example.naruzhkaapp.Buttons.CAMERA_REQUEST_CODE;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.yandex.mapkit.Animation;
@@ -24,6 +29,7 @@ import com.yandex.mapkit.mapview.MapView;
 import com.yandex.mapkit.user_location.UserLocationLayer;
 import com.yandex.runtime.image.ImageProvider;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -106,6 +112,23 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 123 && resultCode == RESULT_OK) {        //Если файл открылся
             Variables.filePath = FileHelper.getRealPathFromURI(this, data.getData());       //Сохраняем путь к файлу
             FileParser.loadFile(Variables.filePath);          //Парсим файл
+        }else if(requestCode == CAMERA_REQUEST_CODE){      //Если был запрос на использование камеры - сохраняем картинку
+            if(resultCode == Activity.RESULT_OK){
+                File f;
+                if (Variables.takePhotoFlag) {
+                    f = new File(String.valueOf(Variables.currentTP.photoPaths.elementAt(Variables.currentTP.photoPaths.size() - 1)));
+                    Methods.createNewPhotoRoom(f, true);      //Создание мини-изображение в layout помещения
+                }else {
+                    f = new File(String.valueOf(Variables.currentLamp.photoPaths.elementAt(Variables.currentLamp.photoPaths.size() - 1)));
+                    Methods.createNewPhotoRoom(f, false);      //Создание мини-изображение в layout помещения
+                }
+                Variables.takePhotoFlag=false;
+                Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                this.sendBroadcast(mediaScanIntent);
+            }
         }
     }
     }

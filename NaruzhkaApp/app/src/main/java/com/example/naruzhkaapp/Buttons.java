@@ -3,7 +3,11 @@ package com.example.naruzhkaapp;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
@@ -14,10 +18,43 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Buttons {
+
+    public static final int CAMERA_PERM_CODE = 101;     //Код доступа к камере
+    public static final int CAMERA_REQUEST_CODE = 102;      //Код доступа к камере
     public static void initBtns(){              //Инициализация кнопок
+
+        Variables.takeTpPic.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активируем камеру
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (Variables.currentTP!=null) {
+                    Variables.takePhotoFlag = true;
+                    verifyPermissions(true);
+                }
+                return false;
+            }
+        });
+
+        Variables.takeLampPic.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активируем камеру
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (Variables.currentLamp!=null) {
+                    Variables.takePhotoFlag = false;
+                    verifyPermissions(false);
+                }
+                return false;
+            }
+        });
+
 
 
         Variables.addPolylines.setOnTouchListener(new View.OnTouchListener() {
@@ -183,6 +220,24 @@ public class Buttons {
             public void afterTextChanged(Editable s) {
                 if (Variables.currentTP!=null){
                     Variables.currentTP.name= String.valueOf(Variables.TPNameEdit.getText());
+                }
+            }
+        });
+
+        Variables.LampHeightEdit.addTextChangedListener(new TextWatcher() {     //Слушатель на изменение высоты светильника
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.currentLamp!=null){
+                    Variables.currentLamp.lampHeight= String.valueOf(Variables.LampHeightEdit.getText());
                 }
             }
         });
@@ -462,6 +517,99 @@ public class Buttons {
         Variables.activity.runOnUiThread(() -> {
             Variables.TPList.addView(txt);      //Добавление панели подстанции в список панелей подстанции
         });
+
+    }
+
+
+
+    private static void verifyPermissions(boolean type){       //Получение разрешений на использование камеры
+        String[] permissions = {android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA};
+
+       /* if(ContextCompat.checkSelfPermission(Variables.activity.getApplicationContext(),
+                permissions[0]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(Variables.activity.getApplicationContext(),
+                permissions[1]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(Variables.activity.getApplicationContext(),
+                permissions[2]) == PackageManager.PERMISSION_GRANTED){*/
+        dispatchTakePictureIntent(type);
+        /*}else{
+            ActivityCompat.requestPermissions(Variables.activity,
+                    permissions,
+                    CAMERA_PERM_CODE);
+        }*/
+    }
+    public static void dispatchTakePictureIntent(boolean type) {        //Функция создания изображения
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(Variables.activity.getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile(type);
+            } catch (IOException ex) {
+                System.out.println(ex.toString());
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(Variables.activity,
+                        BuildConfig.APPLICATION_ID + ".provider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                Variables.activity.startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+            }
+        }
+    }
+
+
+    private static File createImageFile(boolean type) throws IOException {          //Функция создания фотографии
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName="temp";
+        if (type) {
+            if (Variables.currentTP != null) {
+                imageFileName = Variables.currentTP.name + "$"+timeStamp;
+            }
+        }else{
+            if (Variables.currentLamp != null) {
+                if (Variables.currentTP!=null)
+                    imageFileName = Variables.currentTP.name + "$Столб " + Variables.currentLamp.stolbNumber + "$" + Variables.currentLamp.type + " " + Variables.currentLamp.power + "$"+timeStamp;
+            }
+        }
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File directory = new File(Variables.folderPath + "/" + "NaruzhkaApp");
+        if (!directory.exists()) {
+            directory.mkdir();
+            // If you require it to make the entire directory path including parents,
+            // use directory.mkdirs(); here instead.
+        }
+        directory = new File(Variables.folderPath + "/" + "NaruzhkaApp/"+Variables.currentTP.name);
+        if (!directory.exists()) {
+            directory.mkdir();
+            // If you require it to make the entire directory path including parents,
+            // use directory.mkdirs(); here instead.
+        }
+        //String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+        directory = new File(Variables.folderPath + "/" + "NaruzhkaApp/"+Variables.currentTP.name);
+        if (! directory.exists()){
+            directory.mkdir();
+            // If you require it to make the entire directory path including parents,
+            // use directory.mkdirs(); here instead.
+        }
+        File storageDir = new File(Variables.folderPath + "/" + "NaruzhkaApp/"+Variables.currentTP.name);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        if (type)
+            Variables.currentTP.photoPaths.add(image.getAbsolutePath());
+        else
+            Variables.currentLamp.photoPaths.add(image.getAbsolutePath());
+        return image;
     }
 
 }

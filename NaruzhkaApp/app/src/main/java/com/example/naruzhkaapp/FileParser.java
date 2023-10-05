@@ -46,10 +46,29 @@ public class FileParser {
                      //#type;power;stolbNumber;latitude;longtitude;adress;comments;montage#
                      //     //END//
                      out.println("//START//");
-                     out.println("%"+tp.name+";"+tp.adress+";"+String.valueOf(tp.latitude)+";"+String.valueOf(tp.longtitude)+";"+tp.comments+";"+String.valueOf(tp.color)+"%");
-                     for (Lamp lamp:tp.lamps){
-                         out.println("#"+lamp.type+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmount+"#");
+                     String str1 = "%"+tp.name+";"+tp.adress+";"+String.valueOf(tp.latitude)+";"+String.valueOf(tp.longtitude)+";"+tp.comments+";"+String.valueOf(tp.color);
+                     String str2 = ";";
+                     if (tp.photoPaths.size() != 0) {
+                         for (String str : tp.photoPaths) {
+                             str2 += str;
+                             str2 += "!";
+                         }
                      }
+                     str2+="%";
+                     out.println(str1 + str2);
+                     for (Lamp lamp:tp.lamps){
+                         String str11 = "#"+lamp.type+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmount+";"+lamp.lampHeight;
+                         String str22 = ";";
+                         if (tp.photoPaths.size() != 0) {
+                             for (String str : lamp.photoPaths) {
+                                 str22 += str;
+                                 str22 += "!";
+                             }
+                         }
+                         str22+="#";
+                         out.println(str11 + str22);
+                     }
+
                      out.println("//END//");
                  }
                  out.close();
@@ -68,10 +87,29 @@ public class FileParser {
                     //#type;power;stolbNumber;latitude;longtitude;adress;comments;montage#
                     //     //END//
                     out.println("//START//");
-                    out.println("%"+tp.name+";"+tp.adress+";"+String.valueOf(tp.latitude)+";"+String.valueOf(tp.longtitude)+";"+tp.comments+";"+String.valueOf(tp.color)+"%");
-                    for (Lamp lamp:tp.lamps){
-                        out.println("#"+lamp.type+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmount+"#");
+                    String str1 = "%"+tp.name+";"+tp.adress+";"+String.valueOf(tp.latitude)+";"+String.valueOf(tp.longtitude)+";"+tp.comments+";"+String.valueOf(tp.color);
+                    String str2 = ";";
+                    if (tp.photoPaths.size() != 0) {
+                        for (String str : tp.photoPaths) {
+                            str2 += str;
+                            str2 += "!";
+                        }
                     }
+                    str2+="%";
+                    out.println(str1 + str2);
+                    for (Lamp lamp:tp.lamps){
+                        String str11 = "#"+lamp.type+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmount+";"+lamp.lampHeight;
+                        String str22 = ";";
+                        if (lamp.photoPaths.size() != 0) {
+                            for (String str : lamp.photoPaths) {
+                                str22 += str;
+                                str22 += "!";
+                            }
+                        }
+                        str2+="#";
+                        out.println(str11 + str22);
+                    }
+
                     out.println("//END//");
                 }
                 out.close();
@@ -124,6 +162,17 @@ public class FileParser {
                         tp.longtitude = longtitude;
                         tp.comments = comments;
                         tp.color = color;
+                        if (split_tp_info.length>6) {
+                            String paths = split_tp_info[6];
+                            String[] split_tp_photos = paths.split("!");
+                            for (int i = 0; i < split_tp_photos.length; i++) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    if (!Objects.equals(split_tp_photos[i], "%") && Files.exists(Paths.get(split_tp_photos[i]))) {
+                                        tp.photoPaths.add(split_tp_photos[i]);
+                                    }
+                                }
+                            }
+                        }
                         current_tp = tp;
                         Variables.tpList.add(tp);
                     } else if (line.charAt(0) == '#') {
@@ -139,6 +188,7 @@ public class FileParser {
                             String comments = split_lamp_info[6];
                             String montage = split_lamp_info[7];
                             int lampsAmount = Integer.parseInt(split_lamp_info[8]);
+                            String lampHeight = split_lamp_info[9];
                             Lamp lamp = new Lamp();
                             lamp.type = type;
                             lamp.power = power;
@@ -149,6 +199,18 @@ public class FileParser {
                             lamp.comments = comments;
                             lamp.montage = montage;
                             lamp.lampAmount = lampsAmount;
+                            lamp.lampHeight = lampHeight;
+                            if (split_lamp_info.length>10) {
+                                String paths = split_lamp_info[10];
+                                String[] split_lamp_photos = paths.split("!");
+                                for (int i = 0; i < split_lamp_photos.length; i++) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        if (!Objects.equals(split_lamp_photos[i], "#") && Files.exists(Paths.get(split_lamp_photos[i]))) {
+                                            lamp.photoPaths.add(split_lamp_photos[i]);
+                                        }
+                                    }
+                                }
+                            }
                             current_tp.lamps.add(lamp);
                         }
                     }
@@ -173,7 +235,13 @@ public class FileParser {
             filePath+=";";
         }
         filePath+=".txt";
-        File directory = new File(Variables.folderPath + "/" + "NaruzhkaApp/"+"backup");
+        File directory = new File(Variables.folderPath + "/" + "NaruzhkaApp");
+        if (!directory.exists()) {
+            directory.mkdir();
+            // If you require it to make the entire directory path including parents,
+            // use directory.mkdirs(); here instead.
+        }
+        directory = new File(Variables.folderPath + "/" + "NaruzhkaApp/"+"backup");
         if (!directory.exists()) {
             directory.mkdir();
             // If you require it to make the entire directory path including parents,
@@ -189,10 +257,29 @@ public class FileParser {
                 //#type;power;stolbNumber;latitude;longtitude;adress;comments;montage#
                 //     //END//
                 out.println("//START//");
-                out.println("%"+tp.name+";"+tp.adress+";"+String.valueOf(tp.latitude)+";"+String.valueOf(tp.longtitude)+";"+tp.comments+";"+String.valueOf(tp.color)+"%");
-                for (Lamp lamp:tp.lamps){
-                    out.println("#"+lamp.type+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmount+"#");
+                String str1 = "%"+tp.name+";"+tp.adress+";"+String.valueOf(tp.latitude)+";"+String.valueOf(tp.longtitude)+";"+tp.comments+";"+String.valueOf(tp.color);
+                String str2 = ";";
+                if (tp.photoPaths.size() != 0) {
+                    for (String str : tp.photoPaths) {
+                        str2 += str;
+                        str2 += "!";
+                    }
                 }
+                str2+="%";
+                out.println(str1 + str2);
+                for (Lamp lamp:tp.lamps){
+                    String str11 = "#"+lamp.type+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmount+";"+lamp.lampHeight;
+                    String str22 = ";";
+                    if (tp.photoPaths.size() != 0) {
+                        for (String str : lamp.photoPaths) {
+                            str22 += str;
+                            str22 += "!";
+                        }
+                    }
+                    str2+="#";
+                    out.println(str11 + str22);
+                }
+
                 out.println("//END//");
             }
             out.close();
