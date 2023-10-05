@@ -157,6 +157,8 @@ public class FileParser {
             }
             Variables.filePath = path;
             Methods.showTpsAndLamps();
+            Methods.clearPolylines();
+            Methods.displayPolylines();
 
         } catch (IOException e) {
             e.printStackTrace();

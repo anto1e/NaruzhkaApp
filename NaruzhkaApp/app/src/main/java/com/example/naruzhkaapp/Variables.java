@@ -10,12 +10,17 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.geometry.Polyline;
+import com.yandex.mapkit.map.PolylineMapObject;
 import com.yandex.mapkit.mapview.MapView;
 
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 public class Variables {
@@ -32,6 +37,7 @@ public class Variables {
     public static TextView TPLampsText = null;          //Поле отображение количества светильников подстанции
     public static TextView saveFile = null;             //Кнопка сохранения файла
     public static TextView openFile=null;
+    public static TextView addPolylines = null;
     public static boolean addTPFlag=false;          //Флаг добавления подстанции
     public static boolean addLampFlag = false;          //Флаг добавления светильника
     public static Activity activity;                    //Activity
@@ -50,6 +56,8 @@ public class Variables {
     public static Vector<TP> tpList = new Vector<TP>();         //Список подстанций
     public static String filePath="";
     public static String folderPath="/storage/emulated/0/Documents";
+    public static Vector<PolylineMapObject> polylines = new Vector<PolylineMapObject>();
+    public static List<Point> points = new ArrayList<Point>();
 
     //Массив цветов для подстанций и светильников
     public static int[] colors = {Color.BLACK,Color.GREEN,Color.BLUE,Color.GRAY,Color.DKGRAY,Color.YELLOW,Color.CYAN,Color.LTGRAY,Color.MAGENTA};
@@ -76,6 +84,7 @@ public class Variables {
         saveFile = activity.findViewById(R.id.saveFile);
         LampAmountEdit = activity.findViewById(R.id.LampAmountEdit);
         openFile = activity.findViewById(R.id.openFile);
+        addPolylines = activity.findViewById(R.id.addPolylines);
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, lampTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinTypes.setAdapter(adapter);

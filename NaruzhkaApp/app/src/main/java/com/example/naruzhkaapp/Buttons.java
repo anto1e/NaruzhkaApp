@@ -20,6 +20,15 @@ public class Buttons {
     public static void initBtns(){              //Инициализация кнопок
 
 
+        Variables.addPolylines.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Methods.clearPolylines();
+                Methods.displayPolylines();
+                return false;
+            }
+        });
+
         Variables.openFile.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

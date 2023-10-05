@@ -11,15 +11,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.geometry.Polyline;
 import com.yandex.mapkit.map.InputListener;
 import com.yandex.mapkit.map.Map;
 import com.yandex.mapkit.map.MapObject;
 import com.yandex.mapkit.map.MapObjectCollection;
 import com.yandex.mapkit.map.MapObjectTapListener;
 import com.yandex.mapkit.map.PlacemarkMapObject;
+import com.yandex.mapkit.map.PolylineMapObject;
 import com.yandex.runtime.image.ImageProvider;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -217,6 +220,11 @@ public class Methods {
                 setCurrentLamp(lamp);
                 showCurrentLampInfo();
                 displayLampsTPAmount(Variables.currentTP);      //Отображение количества светильников текущей подстанции
+                /*List<Point> list = new ArrayList<Point>();
+                list.add(point);
+                list.add(new Point(0,0));
+                Polyline polyline = new Polyline(list);
+                Variables.mapview.getMap().getMapObjects().addCollection().addPolyline(polyline);*/
             }
         }
 
@@ -325,6 +333,37 @@ public class Methods {
                 lamp.placemark = placemark1;
                 placemark1.setUserData("LAMP%"+lamp.toString());        //Сохранение данных в метку
             }
+        }
+    }
+
+
+    /*List<Point> list = new ArrayList<Point>();
+list.add(point);
+list.add(new Point(0,0));
+Polyline polyline = new Polyline(list);
+Variables.mapview.getMap().getMapObjects().addCollection().addPolyline(polyline);*/
+
+    public static void clearPolylines(){
+        for (PolylineMapObject polylineMapObject:Variables.polylines){
+            polylineMapObject.getParent().remove(polylineMapObject);
+        }
+        Variables.polylines.clear();
+        Variables.points.clear();
+    }
+
+
+    public static void displayPolylines(){
+        for (TP tp:Variables.tpList){
+            Variables.points.add(new Point(tp.latitude,tp.longtitude));
+            for (Lamp lamp:tp.lamps){
+                Variables.points.add(new Point(lamp.latitude,lamp.longtitude));
+            }
+            Polyline polyline = new Polyline(Variables.points);
+            Variables.points.clear();
+            PolylineMapObject polyline1 = Variables.mapview.getMap().getMapObjects().addCollection().addPolyline(polyline);
+            Variables.polylines.add(polyline1);
+            polyline1.setStrokeColor(tp.color);
+            polyline1.setStrokeWidth(3);
         }
     }
 }
