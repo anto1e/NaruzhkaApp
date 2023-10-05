@@ -159,6 +159,19 @@
                     android:textColor="@color/black"
                     android:background="@color/white"
                     android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/makeExcel"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:text="Создать отчет"
+                    android:textAlignment="center"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/black"
+                    android:background="@color/white"
+                    android:layout_marginLeft="5dp"
                     />
 
             </GridLayout>

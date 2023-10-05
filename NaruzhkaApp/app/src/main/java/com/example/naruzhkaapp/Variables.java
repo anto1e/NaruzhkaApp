@@ -40,6 +40,7 @@ public class Variables {
     public static TextView saveFile = null;             //Кнопка сохранения файла
     public static TextView openFile=null;
     public static TextView addPolylines = null;
+    public static TextView makeExcel=null;
     public static boolean addTPFlag=false;          //Флаг добавления подстанции
     public static boolean addLampFlag = false;          //Флаг добавления светильника
     public static Activity activity;                    //Activity
@@ -97,6 +98,7 @@ public class Variables {
         takeLampPic = activity.findViewById(R.id.takePicLampBtn);
         tpGrid = activity.findViewById(R.id.tpGrid);
         lampGrid = activity.findViewById(R.id.lampGrid);
+        makeExcel = activity.findViewById(R.id.makeExcel);
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, lampTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinTypes.setAdapter(adapter);

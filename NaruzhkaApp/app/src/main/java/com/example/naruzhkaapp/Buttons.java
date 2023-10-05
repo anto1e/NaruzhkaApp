@@ -44,6 +44,21 @@ public class Buttons {
             }
         });
 
+        Variables.makeExcel.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                try {
+                    ExcelExporter.exportToExel();
+                    Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
+                        Toast.makeText(Variables.activity.getApplicationContext(), "Отчет создан!", Toast.LENGTH_SHORT).show();
+                    });
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                return false;
+            }
+        });
+
         Variables.takeLampPic.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активируем камеру
             @Override
             public boolean onTouch(View v, MotionEvent event) {
