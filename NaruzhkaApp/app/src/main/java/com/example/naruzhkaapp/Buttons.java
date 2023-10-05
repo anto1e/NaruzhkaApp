@@ -35,7 +35,8 @@ public class Buttons {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 try {
-                    FileParser.saveFile("");
+                    FileParser.backUpFile();
+                    FileParser.saveFile(Variables.filePath);
                     Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
                         Toast.makeText(Variables.activity.getApplicationContext(), "Файл сохранен!", Toast.LENGTH_SHORT).show();
                     });

@@ -56,6 +56,28 @@ public class FileParser {
             } catch (IOException e) {
                 //exception handling left as an exercise for the reader
             }
+        }else{
+            PrintWriter writer = new PrintWriter(path);
+            writer.print("");
+            writer.close();
+            try (FileWriter fw = new FileWriter(path, true);
+                 BufferedWriter bw = new BufferedWriter(fw);
+                 PrintWriter out = new PrintWriter(bw)) {       //Начинаем записывать информацию о комнатах
+                for (TP tp:Variables.tpList){          //  //START//
+                    //%TP-1;adress;latitude;longtitude;comments;color;%
+                    //#type;power;stolbNumber;latitude;longtitude;adress;comments;montage#
+                    //     //END//
+                    out.println("//START//");
+                    out.println("%"+tp.name+";"+tp.adress+";"+String.valueOf(tp.latitude)+";"+String.valueOf(tp.longtitude)+";"+tp.comments+";"+String.valueOf(tp.color)+"%");
+                    for (Lamp lamp:tp.lamps){
+                        out.println("#"+lamp.type+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmount+"#");
+                    }
+                    out.println("//END//");
+                }
+                out.close();
+            } catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
         }
         //try (FileWriter fw = new FileWriter(pathFile, true);
     }
@@ -138,6 +160,42 @@ public class FileParser {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public static void backUpFile() throws IOException {
+        String filePath = Variables.getCurrentTimeStamp()+";";
+        for (TP tp: Variables.tpList){
+            filePath+=tp.name;
+            filePath+=";";
+        }
+        filePath+=".txt";
+        File directory = new File(Variables.folderPath + "/" + "NaruzhkaApp/"+"backup");
+        if (!directory.exists()) {
+            directory.mkdir();
+            // If you require it to make the entire directory path including parents,
+            // use directory.mkdirs(); here instead.
+        }
+        File file = new File(directory+"/"+filePath);
+        file.createNewFile();
+        try (FileWriter fw = new FileWriter(directory+"/"+filePath, true);
+             BufferedWriter bw = new BufferedWriter(fw);
+             PrintWriter out = new PrintWriter(bw)) {       //Начинаем записывать информацию о комнатах
+            for (TP tp:Variables.tpList){          //  //START//
+                //%TP-1;adress;latitude;longtitude;comments;color;%
+                //#type;power;stolbNumber;latitude;longtitude;adress;comments;montage#
+                //     //END//
+                out.println("//START//");
+                out.println("%"+tp.name+";"+tp.adress+";"+String.valueOf(tp.latitude)+";"+String.valueOf(tp.longtitude)+";"+tp.comments+";"+String.valueOf(tp.color)+"%");
+                for (Lamp lamp:tp.lamps){
+                    out.println("#"+lamp.type+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmount+"#");
+                }
+                out.println("//END//");
+            }
+            out.close();
+        } catch (IOException e) {
+            //exception handling left as an exercise for the reader
         }
     }
 }

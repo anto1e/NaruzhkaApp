@@ -289,14 +289,13 @@ public class Methods {
             }
             tp.lamps.clear();
             tp.placemark.getParent().remove(tp.placemark);
-            Variables.tpList.remove(tp);
             Variables.activity.runOnUiThread(() -> {
                 Variables.TPList.removeView(tp.textView);
             });
-            Variables.currentTPFolder = null;
-            Variables.currentTP = null;
-            Variables.currentLamp = null;
         }
+        Variables.currentTPFolder = null;
+        Variables.currentTP = null;
+        Variables.currentLamp = null;
         Variables.tpList.clear();
     }
 

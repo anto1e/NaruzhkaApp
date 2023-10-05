@@ -25,6 +25,8 @@ import com.yandex.mapkit.user_location.UserLocationLayer;
 import com.yandex.runtime.image.ImageProvider;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_STORAGE = 101;
@@ -63,6 +65,24 @@ public class MainActivity extends AppCompatActivity {
         userLocationLayer.setVisible(true);
         userLocationLayer.setHeadingEnabled(true);
         //////////////////////////
+
+        Timer myTimer;
+        myTimer = new Timer();
+
+        myTimer.schedule(new TimerTask() {
+            public void run() {
+                if (Variables.tpList!=null && Variables.tpList.size()>0){
+                    try {
+                        FileParser.backUpFile();
+                        Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
+                            Toast.makeText(Variables.activity.getApplicationContext(), "Резервное сохранение", Toast.LENGTH_SHORT).show();
+                        });
+                    } catch (IOException e) {
+
+                    }
+                }
+            }
+        }, 0, 60*1000); // каждую минуту-сохранение файла;
 
 
     }
