@@ -22,11 +22,22 @@
             android:background="@drawable/toolbarborder">
 
             <ImageView
-                android:id="@+id/removeTPTFromList"
+                android:id="@+id/zoomMe"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="0dp"
+                android:layout_marginLeft="-50dp"
+                android:background="@color/white"
+                android:src="@drawable/location" />
+
+
+            <ImageView
+                android:id="@+id/removeTPTFromList"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="-30dp"
                 android:layout_marginLeft="10dp"
                 android:background="@color/white"
                 android:src="@drawable/delete" />

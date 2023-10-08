@@ -15,6 +15,7 @@ import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.geometry.Polyline;
 import com.yandex.mapkit.map.PolylineMapObject;
 import com.yandex.mapkit.mapview.MapView;
+import com.yandex.mapkit.user_location.UserLocationLayer;
 
 import org.w3c.dom.Text;
 
@@ -53,6 +54,7 @@ public class Variables {
     public static TextView removeLamp=null;                 //Кнопка удаления светильника
     public static ImageView addTPToList;                //Кнопка добавления панели подстанции
     public static LinearLayout TPList;                  //Layout с панелями подстанций
+    public static ImageView zoomMe=null;
     public static boolean TPAdded=true;                 //Флаг, обозначающий добавлена ли подстанция
     public static boolean removeLampFlag=false;             //Флаг удаления светильников
     public static TP currentTP = null;                   //Текущая активная подстанция
@@ -64,6 +66,7 @@ public class Variables {
     public static GridLayout tpGrid=null;
     public static GridLayout lampGrid=null;
     public static boolean takePhotoFlag=false;
+    static UserLocationLayer userLocationLayer;    //Метка местоположения пользователя
     public static MapView mapview;              //Карта
     public static Vector<TP> tpList = new Vector<TP>();         //Список подстанций
     public static String filePath="";
@@ -107,6 +110,7 @@ public class Variables {
         LampTypeKronstEdit = activity.findViewById(R.id.LampTypeKronstEdit);
         LampViletKronsEdit = activity.findViewById(R.id.LampViletKronstEdit);
         LampOporaHeightEdit = activity.findViewById(R.id.LampOporaHeightEdit);
+        zoomMe = activity.findViewById(R.id.zoomMe);
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, lampTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinTypes.setAdapter(adapter);

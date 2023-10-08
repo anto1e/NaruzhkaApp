@@ -22,6 +22,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.map.CameraPosition;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -32,6 +35,19 @@ public class Buttons {
     public static final int CAMERA_PERM_CODE = 101;     //Код доступа к камере
     public static final int CAMERA_REQUEST_CODE = 102;      //Код доступа к камере
     public static void initBtns(){              //Инициализация кнопок
+
+        Variables.zoomMe.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                try {
+                    CameraPosition pos = Variables.userLocationLayer.cameraPosition();
+                    Variables.mapview.getMap().move(pos);
+                }catch (Exception ex){
+
+                }
+                return false;
+            }
+        });
 
         Variables.takeTpPic.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активируем камеру
             @Override

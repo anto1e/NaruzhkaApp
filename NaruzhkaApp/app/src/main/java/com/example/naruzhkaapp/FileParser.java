@@ -145,85 +145,90 @@ public class FileParser {
                         current_tp = null;
                         break;
                 }
-                if (infoStarted && line.charAt(0) != '/') {
-                    if (line.charAt(0) == '%') {
-                        String[] split_line = line.split("%");
-                        String[] split_tp_info = split_line[1].split(";");
-                        String name = split_tp_info[0];
-                        String adress = split_tp_info[1];
-                        double latitude = Double.parseDouble(split_tp_info[2]);
-                        double longtitude = Double.parseDouble(split_tp_info[3]);
-                        String comments = split_tp_info[4];
-                        int color = Integer.parseInt(split_tp_info[5]);
-                        TP tp = new TP();
-                        tp.name = name;
-                        tp.adress = adress;
-                        tp.latitude = latitude;
-                        tp.longtitude = longtitude;
-                        tp.comments = comments;
-                        tp.color = color;
-                        if (split_tp_info.length>6) {
-                            String paths = split_tp_info[6];
-                            String[] split_tp_photos = paths.split("!");
-                            for (int i = 0; i < split_tp_photos.length; i++) {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    if (!Objects.equals(split_tp_photos[i], "%") && Files.exists(Paths.get(split_tp_photos[i]))) {
-                                        tp.photoPaths.add(split_tp_photos[i]);
-                                    }
-                                }
-                            }
-                        }
-                        current_tp = tp;
-                        Variables.tpList.add(tp);
-                    } else if (line.charAt(0) == '#') {
-                        if (current_tp != null) {
-                            String[] split_line = line.split("#");
-                            String[] split_lamp_info = split_line[1].split(";");
-                            String type = split_lamp_info[0];
-                            String oporaHeight = split_lamp_info[1];
-                            String typeSelection = split_lamp_info[2];
-                            String roadDist = split_lamp_info[3];
-                            String typeKronst = split_lamp_info[4];
-                            String viletKronst = split_lamp_info[5];
-                            String power = split_lamp_info[6];
-                            int stolbNumber = Integer.parseInt(split_lamp_info[7]);
-                            double latitude = Double.parseDouble(split_lamp_info[8]);
-                            double longtitude = Double.parseDouble(split_lamp_info[9]);
-                            String adress = split_lamp_info[10];
-                            String comments = split_lamp_info[11];
-                            String montage = split_lamp_info[12];
-                            int lampsAmount = Integer.parseInt(split_lamp_info[13]);
-                            String lampHeight = split_lamp_info[14];
-                            Lamp lamp = new Lamp();
-                            lamp.type = type;
-                            lamp.power = power;
-                            lamp.stolbNumber = stolbNumber;
-                            lamp.latitude = latitude;
-                            lamp.longtitude = longtitude;
-                            lamp.adress = adress;
-                            lamp.comments = comments;
-                            lamp.montage = montage;
-                            lamp.lampAmount = lampsAmount;
-                            lamp.lampHeight = lampHeight;
-                            lamp.fromRoadDist = roadDist;
-                            lamp.typeSelection = Integer.parseInt(typeSelection);
-                            lamp.typeKronst = typeKronst;
-                            lamp.viletKronst = viletKronst;
-                            lamp.oporaHeight = oporaHeight;
-                            if (split_lamp_info.length>15) {
-                                String paths = split_lamp_info[15];
-                                String[] split_lamp_photos = paths.split("!");
-                                for (int i = 0; i < split_lamp_photos.length; i++) {
+                if (!infoEnded) {
+                    if (infoStarted && line.charAt(0) != '/') {
+                        if (line.charAt(0) == '%') {
+                            String[] split_line = line.split("%");
+                            String[] split_tp_info = split_line[1].split(";");
+                            String name = split_tp_info[0];
+                            String adress = split_tp_info[1];
+                            double latitude = Double.parseDouble(split_tp_info[2]);
+                            double longtitude = Double.parseDouble(split_tp_info[3]);
+                            String comments = split_tp_info[4];
+                            int color = Integer.parseInt(split_tp_info[5]);
+                            TP tp = new TP();
+                            tp.name = name;
+                            tp.adress = adress;
+                            tp.latitude = latitude;
+                            tp.longtitude = longtitude;
+                            tp.comments = comments;
+                            tp.color = color;
+                            if (split_tp_info.length > 6) {
+                                String paths = split_tp_info[6];
+                                String[] split_tp_photos = paths.split("!");
+                                for (int i = 0; i < split_tp_photos.length; i++) {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                        if (!Objects.equals(split_lamp_photos[i], "#") && Files.exists(Paths.get(split_lamp_photos[i]))) {
-                                            lamp.photoPaths.add(split_lamp_photos[i]);
+                                        if (!Objects.equals(split_tp_photos[i], "%") && Files.exists(Paths.get(split_tp_photos[i]))) {
+                                            tp.photoPaths.add(split_tp_photos[i]);
                                         }
                                     }
                                 }
                             }
-                            current_tp.lamps.add(lamp);
+                            current_tp = tp;
+                            Variables.tpList.add(tp);
+                        } else if (line.charAt(0) == '#') {
+                            if (current_tp != null) {
+                                String[] split_line = line.split("#");
+                                String[] split_lamp_info = split_line[1].split(";");
+                                String type = split_lamp_info[0];
+                                String oporaHeight = split_lamp_info[1];
+                                String typeSelection = split_lamp_info[2];
+                                String roadDist = split_lamp_info[3];
+                                String typeKronst = split_lamp_info[4];
+                                String viletKronst = split_lamp_info[5];
+                                String power = split_lamp_info[6];
+                                int stolbNumber = Integer.parseInt(split_lamp_info[7]);
+                                double latitude = Double.parseDouble(split_lamp_info[8]);
+                                double longtitude = Double.parseDouble(split_lamp_info[9]);
+                                String adress = split_lamp_info[10];
+                                String comments = split_lamp_info[11];
+                                String montage = split_lamp_info[12];
+                                int lampsAmount = Integer.parseInt(split_lamp_info[13]);
+                                String lampHeight = split_lamp_info[14];
+                                Lamp lamp = new Lamp();
+                                lamp.type = type;
+                                lamp.power = power;
+                                lamp.stolbNumber = stolbNumber;
+                                lamp.latitude = latitude;
+                                lamp.longtitude = longtitude;
+                                lamp.adress = adress;
+                                lamp.comments = comments;
+                                lamp.montage = montage;
+                                lamp.lampAmount = lampsAmount;
+                                lamp.lampHeight = lampHeight;
+                                lamp.fromRoadDist = roadDist;
+                                lamp.typeSelection = Integer.parseInt(typeSelection);
+                                lamp.typeKronst = typeKronst;
+                                lamp.viletKronst = viletKronst;
+                                lamp.oporaHeight = oporaHeight;
+                                if (split_lamp_info.length > 15) {
+                                    String paths = split_lamp_info[15];
+                                    String[] split_lamp_photos = paths.split("!");
+                                    for (int i = 0; i < split_lamp_photos.length; i++) {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            if (!Objects.equals(split_lamp_photos[i], "#") && Files.exists(Paths.get(split_lamp_photos[i]))) {
+                                                lamp.photoPaths.add(split_lamp_photos[i]);
+                                            }
+                                        }
+                                    }
+                                }
+                                current_tp.lamps.add(lamp);
+                            }
                         }
                     }
+                }
+                else {
+                    break;
                 }
                 line = reader.readLine();
             }

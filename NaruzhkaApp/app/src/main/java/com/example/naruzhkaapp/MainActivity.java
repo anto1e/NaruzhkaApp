@@ -36,7 +36,6 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_STORAGE = 101;
-    private UserLocationLayer userLocationLayer;    //Метка местоположения пользователя
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
         //////Отображение метки местоположения пользователя на карте и задание слушателя нажатий на карту//////
         MapKit mapKit = MapKitFactory.getInstance();
         Variables.mapview.getMap().addInputListener(Methods.inputListener);
-        userLocationLayer = mapKit.createUserLocationLayer(Variables.mapview.getMapWindow());
-        userLocationLayer.setVisible(true);
-        userLocationLayer.setHeadingEnabled(true);
+        Variables.userLocationLayer = mapKit.createUserLocationLayer(Variables.mapview.getMapWindow());
+        Variables.userLocationLayer.setVisible(true);
+        Variables.userLocationLayer.setHeadingEnabled(true);
         //////////////////////////
 
         Timer myTimer;
