@@ -266,6 +266,10 @@ public class Methods {
         Variables.LampCommentsEdit.setText(Variables.currentLamp.comments);
         Variables.LampAmountEdit.setText(String.valueOf(Variables.currentLamp.lampAmount));
         Variables.LampHeightEdit.setText(String.valueOf(Variables.currentLamp.lampHeight));
+        Variables.LampFromRoadDistEdit.setText(Variables.currentLamp.fromRoadDist);
+        Variables.LampTypeKronstEdit.setText(Variables.currentLamp.typeKronst);
+        Variables.LampViletKronsEdit.setText(Variables.currentLamp.viletKronst);
+        Variables.LampOporaHeightEdit.setText(Variables.currentLamp.oporaHeight);
         showLampsAllPhotos(Variables.currentLamp);
     }
     }
@@ -276,6 +280,8 @@ public class Methods {
 
     public static void makeLampActive(Lamp lamp){
         disactiveLamp();
+        Variables.currentLamp=null;
+        Variables.spinTypes.setSelection(0);
         Point mappoint= new Point(lamp.latitude, lamp.longtitude);   //Создание точки на карте
         lamp.placemark.getParent().remove(lamp.placemark);
         MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();

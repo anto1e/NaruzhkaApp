@@ -35,6 +35,10 @@ public class Variables {
     public static EditText LampCommentsEdit = null;  //Поле ввода комментариев к светильнику
     public static EditText TPAdressEdit = null;         //Поле адреса подстанции
     public static EditText LampAmountEdit=null;         //Количество светильников на столбе
+    public static EditText LampFromRoadDistEdit = null;
+    public static EditText LampTypeKronstEdit = null;
+    public static EditText LampViletKronsEdit = null;
+    public static EditText LampOporaHeightEdit=null;
     public static EditText LampHeightEdit=null;
     public static TextView TPLampsText = null;          //Поле отображение количества светильников подстанции
     public static TextView saveFile = null;             //Кнопка сохранения файла
@@ -70,7 +74,7 @@ public class Variables {
     //Массив цветов для подстанций и светильников
     public static int[] colors = {Color.BLACK,Color.GREEN,Color.BLUE,Color.GRAY,Color.DKGRAY,Color.YELLOW,Color.CYAN,Color.LTGRAY,Color.MAGENTA};
 
-    public static String[] lampTypes = {"-","РТУ-250","РКУ-250","ЖТУ-250","ЖКУ-250","LED-100"};
+    public static String[] lampTypes = {"-","РТУ-125","РТУ-150","РТУ-250","РКУ-250","РКУ-400","ЖКУ-100","ЖКУ-150","ЖТУ-250","ЖКУ-250","ЖКУ-400","Инд.-120","LED-50","LED-75","LED-100","LED-130","LED-150","LED-180","LED-200","Пр.-35","Пр.-70","Пр.-150","Пр.-300","Пр.-400","Пр.-500","Пр.-1000","BR-250","GS-240"};
     public static int currentColor=0;       //Указатель на текущий использующийся цвет
 
     public static void init(){          //Инициализация переменных
@@ -99,6 +103,10 @@ public class Variables {
         tpGrid = activity.findViewById(R.id.tpGrid);
         lampGrid = activity.findViewById(R.id.lampGrid);
         makeExcel = activity.findViewById(R.id.makeExcel);
+        LampFromRoadDistEdit = activity.findViewById(R.id.LampFromRoadDistEdit);
+        LampTypeKronstEdit = activity.findViewById(R.id.LampTypeKronstEdit);
+        LampViletKronsEdit = activity.findViewById(R.id.LampViletKronstEdit);
+        LampOporaHeightEdit = activity.findViewById(R.id.LampOporaHeightEdit);
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, lampTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinTypes.setAdapter(adapter);

@@ -186,7 +186,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
-                    android:paddingBottom="200dp"
+                    android:paddingBottom="250dp"
                     android:layout_height="wrap_content">
                     <TextView
                         app:layout_constraintTop_toTopOf="parent"
@@ -334,6 +334,27 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="Выс.опоры:"/>
+                            <EditText
+                                android:id="@+id/LampOporaHeightEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="-45dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="8sp"
+                                android:text="Раст. опоры от покрытия:"/>
+                            <EditText
+                                android:id="@+id/LampFromRoadDistEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="-45dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text="Светильников:"/>
                             <EditText
                                 android:id="@+id/LampAmountEdit"
@@ -347,6 +368,28 @@
                                 android:text="Монтаж:"/>
                             <EditText
                                 android:id="@+id/LampMontageEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="-45dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:textSize="12sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Тип кронштейна:"/>
+                            <EditText
+                                android:id="@+id/LampTypeKronstEdit"
+                                android:textSize="10sp"
+                                android:layout_marginLeft="-45dp"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:textSize="10sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Вылет кронштейна:"/>
+                            <EditText
+                                android:id="@+id/LampViletKronstEdit"
                                 android:textSize="10sp"
                                 android:layout_marginLeft="-45dp"
                                 android:layout_width="70dp"

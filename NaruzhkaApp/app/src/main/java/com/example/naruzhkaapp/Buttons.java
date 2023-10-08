@@ -96,7 +96,6 @@ public class Buttons {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 try {
-                    FileParser.backUpFile();
                     FileParser.saveFile(Variables.filePath);
                     Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
                         Toast.makeText(Variables.activity.getApplicationContext(), "Файл сохранен!", Toast.LENGTH_SHORT).show();
@@ -277,6 +276,63 @@ public class Buttons {
             }
         });
 
+        Variables.LampFromRoadDistEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.currentLamp!=null){
+                    Variables.currentLamp.fromRoadDist = String.valueOf(Variables.LampFromRoadDistEdit.getText());
+                }
+            }
+        });
+
+        Variables.LampTypeKronstEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.currentLamp!=null){
+                    Variables.currentLamp.typeKronst = String.valueOf(Variables.LampTypeKronstEdit.getText());
+                }
+            }
+        });
+
+        Variables.LampViletKronsEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.currentLamp!=null){
+                    Variables.currentLamp.viletKronst = String.valueOf(Variables.LampViletKronsEdit.getText());
+                }
+            }
+        });
+
         Variables.TPCommentsEdit.addTextChangedListener(new TextWatcher() {           //Слушатель на изменение комментариев к подстанции
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -311,6 +367,25 @@ public class Buttons {
             public void afterTextChanged(Editable s) {
                 if (Variables.currentLamp!=null){
                     Variables.currentLamp.type= String.valueOf(Variables.LampTypeEdit.getText());
+                }
+            }
+        });
+
+        Variables.LampOporaHeightEdit.addTextChangedListener(new TextWatcher() {           //Слушатель на изменение типа светильника
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.currentLamp!=null){
+                    Variables.currentLamp.oporaHeight= String.valueOf(Variables.LampOporaHeightEdit.getText());
                 }
             }
         });
@@ -419,6 +494,16 @@ public class Buttons {
                 if(Variables.currentLamp!=null && Variables.spinTypes.getSelectedItemPosition()!=0) {
                     Variables.currentLamp.typeSelection = Variables.spinTypes.getSelectedItemPosition();
                     switch (String.valueOf(Variables.spinTypes.getSelectedItem())){
+                        case "РТУ-125":
+                            Variables.currentLamp.type="ДРЛ";
+                            Variables.currentLamp.power="125Вт";
+                            Variables.currentLamp.montage="Напольная/Венчающая";
+                            break;
+                        case "РТУ-150":
+                            Variables.currentLamp.type="ДРЛ";
+                            Variables.currentLamp.power="150Вт";
+                            Variables.currentLamp.montage="Напольная/Венчающая";
+                            break;
                         case "РТУ-250":
                             Variables.currentLamp.type="ДРЛ";
                             Variables.currentLamp.power="250Вт";
@@ -429,20 +514,115 @@ public class Buttons {
                             Variables.currentLamp.power="250Вт";
                             Variables.currentLamp.montage="Консоль";
                             break;
+                        case "РКУ-400":
+                            Variables.currentLamp.type="ДРЛ";
+                            Variables.currentLamp.power="400Вт";
+                            Variables.currentLamp.montage="Консоль";
+                            break;
                         case "ЖТУ-250":
                             Variables.currentLamp.type="ДНаТ";
                             Variables.currentLamp.power="250Вт";
                             Variables.currentLamp.montage="Напольная/Венчающая";
+                            break;
+                        case "ЖКУ-100":
+                            Variables.currentLamp.type="ДНаТ";
+                            Variables.currentLamp.power="100Вт";
+                            Variables.currentLamp.montage="Консоль";
+                            break;
+                        case "ЖКУ-150":
+                            Variables.currentLamp.type="ДНаТ";
+                            Variables.currentLamp.power="150Вт";
+                            Variables.currentLamp.montage="Консоль";
                             break;
                         case "ЖКУ-250":
                             Variables.currentLamp.type="ДНаТ";
                             Variables.currentLamp.power="250Вт";
                             Variables.currentLamp.montage="Консоль";
                             break;
+                        case "ЖКУ-400":
+                            Variables.currentLamp.type="ДНаТ";
+                            Variables.currentLamp.power="400Вт";
+                            Variables.currentLamp.montage="Консоль";
+                            break;
+                        case "Инд.-120":
+                            Variables.currentLamp.type="Индукционный";
+                            Variables.currentLamp.power="120Вт";
+                            Variables.currentLamp.montage="";
+                            break;
+                        case "LED-50":
+                            Variables.currentLamp.type="Светодиодный";
+                            Variables.currentLamp.power="50Вт";
+                            Variables.currentLamp.montage="Консоль";
+                            break;
+                        case "LED-75":
+                            Variables.currentLamp.type="Светодиодный";
+                            Variables.currentLamp.power="75Вт";
+                            Variables.currentLamp.montage="Консоль";
+                            break;
                         case "LED-100":
                             Variables.currentLamp.type="Светодиодный";
                             Variables.currentLamp.power="100Вт";
                             Variables.currentLamp.montage="Консоль";
+                            break;
+                        case "LED-130":
+                            Variables.currentLamp.type="Светодиодный";
+                            Variables.currentLamp.power="130Вт";
+                            Variables.currentLamp.montage="Консоль";
+                            break;
+                        case "LED-150":
+                            Variables.currentLamp.type="Светодиодный";
+                            Variables.currentLamp.power="150Вт";
+                            Variables.currentLamp.montage="Консоль";
+                            break;
+                        case "LED-180":
+                            Variables.currentLamp.type="Светодиодный";
+                            Variables.currentLamp.power="180Вт";
+                            Variables.currentLamp.montage="Консоль";
+                            break;
+                        case "Пр.-35":
+                            Variables.currentLamp.type="";
+                            Variables.currentLamp.power="35Вт";
+                            Variables.currentLamp.montage="";
+                            break;
+                        case "Пр.-70":
+                            Variables.currentLamp.type="";
+                            Variables.currentLamp.power="70Вт";
+                            Variables.currentLamp.montage="";
+                            break;
+                        case "Пр.-150":
+                            Variables.currentLamp.type="";
+                            Variables.currentLamp.power="150Вт";
+                            Variables.currentLamp.montage="";
+                            break;
+                        case "Пр.-300":
+                            Variables.currentLamp.type="";
+                            Variables.currentLamp.power="300Вт";
+                            Variables.currentLamp.montage="";
+                            break;
+                        case "Пр.-400":
+                            Variables.currentLamp.type="";
+                            Variables.currentLamp.power="400Вт";
+                            Variables.currentLamp.montage="";
+                            break;
+                        case "Пр.-500":
+                            Variables.currentLamp.type="";
+                            Variables.currentLamp.power="500Вт";
+                            Variables.currentLamp.montage="";
+                            break;
+                        case "Пр.-1000":
+                            Variables.currentLamp.type="";
+                            Variables.currentLamp.power="1000Вт";
+                            Variables.currentLamp.montage="";
+                            break;
+                        case "BR-250":
+                            Variables.currentLamp.type="ГОБО";
+                            Variables.currentLamp.power="250Вт";
+                            Variables.currentLamp.montage="";
+                            break;
+                        case "GS-240":
+                            Variables.currentLamp.type="ГОБО";
+                            Variables.currentLamp.power="240Вт";
+                            Variables.currentLamp.montage="";
                             break;
                     }
                 }

@@ -14,8 +14,12 @@ public class Lamp {
     public String adress="";        //Адрес местоположения светильника;
     public String comments="";      //Комментарии к светильнику;
     public String montage="";           //Тип монтажа светильника
+    public String oporaHeight="0";
     public int lampAmount = 1;          //Количество светильников на столбе
     public String lampHeight="0";
+    public String fromRoadDist = "0";
+    public String typeKronst = "";
+    public String viletKronst = "0";
     PlacemarkMapObject placemark = null;        //Иконка на карте
 
     Vector<String> photoPaths = new Vector<String>();       //Вектор путей к фотографиям комнаты
