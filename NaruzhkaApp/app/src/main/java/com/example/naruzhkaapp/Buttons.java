@@ -598,17 +598,17 @@ public class Buttons {
                         case "РТУ-125":
                             Variables.currentLamp.type="ДРЛ";
                             Variables.currentLamp.power="125Вт";
-                            Variables.currentLamp.montage="Напольная/Венчающая";
+                            Variables.currentLamp.montage="Торшер";
                             break;
                         case "РТУ-150":
                             Variables.currentLamp.type="ДРЛ";
                             Variables.currentLamp.power="150Вт";
-                            Variables.currentLamp.montage="Напольная/Венчающая";
+                            Variables.currentLamp.montage="Торшер";
                             break;
                         case "РТУ-250":
                             Variables.currentLamp.type="ДРЛ";
                             Variables.currentLamp.power="250Вт";
-                            Variables.currentLamp.montage="Напольная/Венчающая";
+                            Variables.currentLamp.montage="Торшер";
                             break;
                         case "РКУ-250":
                             Variables.currentLamp.type="ДРЛ";
@@ -623,7 +623,7 @@ public class Buttons {
                         case "ЖТУ-250":
                             Variables.currentLamp.type="ДНаТ";
                             Variables.currentLamp.power="250Вт";
-                            Variables.currentLamp.montage="Напольная/Венчающая";
+                            Variables.currentLamp.montage="Торшер";
                             break;
                         case "ЖКУ-100":
                             Variables.currentLamp.type="ДНаТ";

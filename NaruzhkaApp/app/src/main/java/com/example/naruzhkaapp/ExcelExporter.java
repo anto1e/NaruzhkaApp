@@ -57,11 +57,19 @@ public class ExcelExporter {
         for (TP tp:Variables.tpList){
             for (Lamp lamp:tp.lamps){
                 Cell cell = cells.get("B" + Integer.toString(rowCount));
-                cell.setValue(lamp.adress);
+                //cell.setValue(lamp.adress);
                 cell = cells.get("C" + Integer.toString(rowCount));
-                cell.setValue(tp.name+"/"+tp.adress);
+                cell.setValue(tp.name+"/"+tp.adress+"/"+tp.latitude+";"+tp.longtitude);
+                cell = cells.get("D" + Integer.toString(rowCount));
+                cell.setValue(lamp.roadWidth);
+                cell = cells.get("E" + Integer.toString(rowCount));
+                cell.setValue(Variables.spinPolos.getItemAtPosition(lamp.roadPolosSelection));
+                cell = cells.get("F" + Integer.toString(rowCount));
+                cell.setValue(lamp.roadLength);
                 cell = cells.get("G" + Integer.toString(rowCount));
-                cell.setValue(lamp.comments);
+                cell.setValue(lamp.roadOsobennost);
+                cell = cells.get("H" + Integer.toString(rowCount));
+                cell.setValue(lamp.roadRasstanovka);
                 cell = cells.get("I" + Integer.toString(rowCount));
                 cell.setValue(lamp.latitude+"/"+lamp.longtitude);
                 cell = cells.get("L" + Integer.toString(rowCount));
@@ -71,17 +79,17 @@ public class ExcelExporter {
                 cell = cells.get("K" + Integer.toString(rowCount));
                 cell.setValue(lamp.fromRoadDist);
                 cell = cells.get("M" + Integer.toString(rowCount));
-                cell.setValue(lamp.type+"-"+lamp.power);
+                cell.setValue(Variables.spinTypes.getItemAtPosition(lamp.typeSelection));
                 cell = cells.get("R" + Integer.toString(rowCount));
                 cell.setValue(lamp.power);
                 cell = cells.get("O" + Integer.toString(rowCount));
-                //cell.setValue(lamp.typeKronst);
+                cell.setValue(Variables.spinKronstTypes.getItemAtPosition(lamp.typeKronstSelection));
                 cell = cells.get("P" + Integer.toString(rowCount));
                 cell.setValue(lamp.viletKronst);
                 cell = cells.get("N" + Integer.toString(rowCount));
                 cell.setValue(lamp.montage);
                 cell = cells.get("Q" + Integer.toString(rowCount));
-                //cell.setValue(lamp.lampAmount);
+                cell.setValue(Variables.spinLampsAmount.getItemAtPosition(lamp.lampAmountSelection));
                 rowCount++;
             }
         }
@@ -89,7 +97,11 @@ public class ExcelExporter {
     }
 
     public static void save() throws Exception {       //Сохранение в новый файл(Aspose Cells)
-        String file_name=Variables.folderPath + "/" + "/NaruzhkaApp/Otcheti/"+Variables.getCurrentTimeStamp() + ".xlsx";
+        String file_name=Variables.folderPath + "/" + "/NaruzhkaApp/Otcheti/"+Variables.getCurrentTimeStamp()+";";
+        for (TP tp:Variables.tpList){
+            file_name+=tp.name+";";
+        }
+        file_name+=".xlsx";
         workbook.save(file_name);
         //Пересохранение файла, с удалением страницы о пробной лицензии(Apache POI Excel)
         FileInputStream inputStream = new FileInputStream(new File(file_name));
