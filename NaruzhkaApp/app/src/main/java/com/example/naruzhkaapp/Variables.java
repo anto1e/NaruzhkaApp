@@ -41,17 +41,26 @@ public class Variables {
     public static EditText LampViletKronsEdit = null;
     public static EditText LampOporaHeightEdit=null;
     public static EditText LampHeightEdit=null;
+    public static EditText RoadWidthEdit=null;
+    public static Spinner spinPolos=null;
+    public static EditText RoadSPolotnaEdit=null;
+    public static Spinner spinOsobennost=null;
+    public static EditText RoadOsobennostEdit=null;
+    public static EditText RoadRasstanovkaEdit=null;
+    public static Spinner spinKronstTypes=null;
+    public static Spinner spinLampsAmount=null;
+
     public static TextView TPLampsText = null;          //Поле отображение количества светильников подстанции
-    public static TextView saveFile = null;             //Кнопка сохранения файла
-    public static TextView openFile=null;
-    public static TextView addPolylines = null;
-    public static TextView makeExcel=null;
+    public static ImageView saveFile = null;             //Кнопка сохранения файла
+    public static ImageView openFile=null;
+    public static ImageView addPolylines = null;
+    public static ImageView makeExcel=null;
     public static boolean addTPFlag=false;          //Флаг добавления подстанции
     public static boolean addLampFlag = false;          //Флаг добавления светильника
     public static Activity activity;                    //Activity
     public static TextView addTP;                       //Кнопка добавления подстанции
-    public static TextView addLamp=null;                     //Кнопка добавления светильника
-    public static TextView removeLamp=null;                 //Кнопка удаления светильника
+    public static ImageView addLamp=null;                     //Кнопка добавления светильника
+    public static ImageView removeLamp=null;                 //Кнопка удаления светильника
     public static ImageView addTPToList;                //Кнопка добавления панели подстанции
     public static LinearLayout TPList;                  //Layout с панелями подстанций
     public static ImageView zoomMe=null;
@@ -78,6 +87,11 @@ public class Variables {
     public static int[] colors = {Color.BLACK,Color.GREEN,Color.BLUE,Color.GRAY,Color.DKGRAY,Color.YELLOW,Color.CYAN,Color.LTGRAY,Color.MAGENTA};
 
     public static String[] lampTypes = {"-","РТУ-125","РТУ-150","РТУ-250","РКУ-250","РКУ-400","ЖКУ-100","ЖКУ-150","ЖТУ-250","ЖКУ-250","ЖКУ-400","Инд.-120","LED-50","LED-75","LED-100","LED-130","LED-150","LED-180","LED-200","Пр.-35","Пр.-70","Пр.-150","Пр.-300","Пр.-400","Пр.-500","Пр.-1000","BR-250","GS-240"};
+    public static String[] polosAmount = {"-","1","2","4","6","8"};
+    public static String[] kronstType = {"1 рожок","2 рожка","3 рожка","4 рожка","5 рожка","6 рожков","7 рожков","8 рожков","9 рожков","10 рожков","11 рожков","12 рожков","13 рожков","14 рожков","15 рожков"};
+    public static String[] lampsAmount = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
+    public static String[] osobennostArray = {"-","Перекресток","Парк","Памятник","Пешеходный переход"};
+
     public static int currentColor=0;       //Указатель на текущий использующийся цвет
 
     public static void init(){          //Инициализация переменных
@@ -90,14 +104,12 @@ public class Variables {
         TPCommentsEdit = activity.findViewById(R.id.TPCommentsEdit);
         LampTypeEdit = activity.findViewById(R.id.LampTypeEdit);
         LampPowerEdit = activity.findViewById(R.id.LampPowerEdit);
-        LampAdressEdit = activity.findViewById(R.id.LampAdressEdit);
         LampCommentsEdit = activity.findViewById(R.id.LampCommentsEdit);
         LampMontageEdit = activity.findViewById(R.id.LampMontageEdit);
         spinTypes = activity.findViewById(R.id.spinTypes);
         removeLamp = activity.findViewById(R.id.removeLamp);
         removeTpFromList = activity.findViewById(R.id.removeTPTFromList);
         saveFile = activity.findViewById(R.id.saveFile);
-        LampAmountEdit = activity.findViewById(R.id.LampAmountEdit);
         openFile = activity.findViewById(R.id.openFile);
         addPolylines = activity.findViewById(R.id.addPolylines);
         LampHeightEdit = activity.findViewById(R.id.LampHeightEdit);
@@ -106,14 +118,33 @@ public class Variables {
         tpGrid = activity.findViewById(R.id.tpGrid);
         lampGrid = activity.findViewById(R.id.lampGrid);
         makeExcel = activity.findViewById(R.id.makeExcel);
-        LampFromRoadDistEdit = activity.findViewById(R.id.LampFromRoadDistEdit);
-        LampTypeKronstEdit = activity.findViewById(R.id.LampTypeKronstEdit);
         LampViletKronsEdit = activity.findViewById(R.id.LampViletKronstEdit);
         LampOporaHeightEdit = activity.findViewById(R.id.LampOporaHeightEdit);
         zoomMe = activity.findViewById(R.id.zoomMe);
+        RoadWidthEdit=activity.findViewById(R.id.RoadWidthEdit);
+        RoadSPolotnaEdit=activity.findViewById(R.id.RoadSPolotnaEdit);
+        RoadOsobennostEdit=activity.findViewById(R.id.RoadOsobennostEdit);
+        RoadRasstanovkaEdit=activity.findViewById(R.id.RoadRasstanovkaEdit);
+        spinPolos = activity.findViewById(R.id.spinPolos);
+        spinOsobennost = activity.findViewById(R.id.spinOsobennost);
+        spinKronstTypes = activity.findViewById(R.id.spinKronstTypes);
+        spinLampsAmount = activity.findViewById(R.id.spinLampsAmount);
+        LampFromRoadDistEdit = activity.findViewById(R.id.LampFromRoadDistEdit);
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, lampTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinTypes.setAdapter(adapter);
+        adapter = new ArrayAdapter(activity, R.layout.spinner_item, polosAmount);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinPolos.setAdapter(adapter);
+        adapter = new ArrayAdapter(activity, R.layout.spinner_item, osobennostArray);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinOsobennost.setAdapter(adapter);
+        adapter = new ArrayAdapter(activity, R.layout.spinner_item, kronstType);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinKronstTypes.setAdapter(adapter);
+        adapter = new ArrayAdapter(activity, R.layout.spinner_item, lampsAmount);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinLampsAmount.setAdapter(adapter);
     }
 
 

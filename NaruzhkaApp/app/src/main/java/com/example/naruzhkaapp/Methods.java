@@ -259,15 +259,19 @@ public class Methods {
 
     public static void showCurrentLampInfo() {
         if (Variables.currentLamp != null){
+            Variables.RoadWidthEdit.setText(Variables.currentLamp.roadWidth);
+            Variables.spinPolos.setSelection(Variables.currentLamp.roadPolosSelection);
+            Variables.RoadSPolotnaEdit.setText(Variables.currentLamp.roadLength);
+            Variables.RoadOsobennostEdit.setText(Variables.currentLamp.roadOsobennost);
+            Variables.RoadRasstanovkaEdit.setText(Variables.currentLamp.roadRasstanovka);
+            Variables.spinKronstTypes.setSelection(Variables.currentLamp.typeKronstSelection);
+            Variables.spinLampsAmount.setSelection(Variables.currentLamp.lampAmountSelection);
             Variables.LampTypeEdit.setText(Variables.currentLamp.type);
         Variables.LampPowerEdit.setText(Variables.currentLamp.power);
         Variables.LampMontageEdit.setText(Variables.currentLamp.montage);
-        Variables.LampAdressEdit.setText(Variables.currentLamp.adress);
         Variables.LampCommentsEdit.setText(Variables.currentLamp.comments);
-        Variables.LampAmountEdit.setText(String.valueOf(Variables.currentLamp.lampAmount));
         Variables.LampHeightEdit.setText(String.valueOf(Variables.currentLamp.lampHeight));
         Variables.LampFromRoadDistEdit.setText(Variables.currentLamp.fromRoadDist);
-        Variables.LampTypeKronstEdit.setText(Variables.currentLamp.typeKronst);
         Variables.LampViletKronsEdit.setText(Variables.currentLamp.viletKronst);
         Variables.LampOporaHeightEdit.setText(Variables.currentLamp.oporaHeight);
         showLampsAllPhotos(Variables.currentLamp);
@@ -282,6 +286,7 @@ public class Methods {
         disactiveLamp();
         Variables.currentLamp=null;
         Variables.spinTypes.setSelection(0);
+        Variables.spinOsobennost.setSelection(0);
         Point mappoint= new Point(lamp.latitude, lamp.longtitude);   //Создание точки на карте
         lamp.placemark.getParent().remove(lamp.placemark);
         MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();

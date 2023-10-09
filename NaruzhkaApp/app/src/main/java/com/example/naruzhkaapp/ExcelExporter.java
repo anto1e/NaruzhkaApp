@@ -75,13 +75,13 @@ public class ExcelExporter {
                 cell = cells.get("R" + Integer.toString(rowCount));
                 cell.setValue(lamp.power);
                 cell = cells.get("O" + Integer.toString(rowCount));
-                cell.setValue(lamp.typeKronst);
+                //cell.setValue(lamp.typeKronst);
                 cell = cells.get("P" + Integer.toString(rowCount));
                 cell.setValue(lamp.viletKronst);
                 cell = cells.get("N" + Integer.toString(rowCount));
                 cell.setValue(lamp.montage);
                 cell = cells.get("Q" + Integer.toString(rowCount));
-                cell.setValue(lamp.lampAmount);
+                //cell.setValue(lamp.lampAmount);
                 rowCount++;
             }
         }

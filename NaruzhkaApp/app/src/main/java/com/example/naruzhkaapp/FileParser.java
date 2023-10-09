@@ -57,7 +57,7 @@ public class FileParser {
                      str2+="%";
                      out.println(str1 + str2);
                      for (Lamp lamp:tp.lamps){
-                         String str11 = "#"+lamp.type+";"+lamp.oporaHeight+";"+lamp.typeSelection+";"+lamp.fromRoadDist+";"+lamp.typeKronst+";"+lamp.viletKronst+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmount+";"+lamp.lampHeight;
+                         String str11 = "#"+lamp.type+";"+lamp.roadWidth+";"+lamp.roadPolosSelection+";"+lamp.roadLength+";"+lamp.roadOsobennostSelection+";"+lamp.roadOsobennost+";"+lamp.roadRasstanovka+";"+lamp.oporaHeight+";"+lamp.typeSelection+";"+lamp.fromRoadDist+";"+lamp.typeKronstSelection+";"+lamp.viletKronst+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmountSelection+";"+lamp.lampHeight;
                          String str22 = ";";
                          if (lamp.photoPaths.size() != 0) {
                              for (String str : lamp.photoPaths) {
@@ -98,7 +98,7 @@ public class FileParser {
                     str2+="%";
                     out.println(str1 + str2);
                     for (Lamp lamp:tp.lamps){
-                        String str11 = "#"+lamp.type+";"+lamp.oporaHeight+";"+lamp.typeSelection+";"+lamp.fromRoadDist+";"+lamp.typeKronst+";"+lamp.viletKronst+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmount+";"+lamp.lampHeight;
+                        String str11 = "#"+lamp.type+";"+lamp.roadWidth+";"+lamp.roadPolosSelection+";"+lamp.roadLength+";"+lamp.roadOsobennostSelection+";"+lamp.roadOsobennost+";"+lamp.roadRasstanovka+";"+lamp.oporaHeight+";"+lamp.typeSelection+";"+lamp.fromRoadDist+";"+lamp.typeKronstSelection+";"+lamp.viletKronst+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmountSelection+";"+lamp.lampHeight;
                         String str22 = ";";
                         if (lamp.photoPaths.size() != 0) {
                             for (String str : lamp.photoPaths) {
@@ -145,7 +145,6 @@ public class FileParser {
                         current_tp = null;
                         break;
                 }
-                if (!infoEnded) {
                     if (infoStarted && line.charAt(0) != '/') {
                         if (line.charAt(0) == '%') {
                             String[] split_line = line.split("%");
@@ -181,22 +180,34 @@ public class FileParser {
                                 String[] split_line = line.split("#");
                                 String[] split_lamp_info = split_line[1].split(";");
                                 String type = split_lamp_info[0];
-                                String oporaHeight = split_lamp_info[1];
-                                String typeSelection = split_lamp_info[2];
-                                String roadDist = split_lamp_info[3];
-                                String typeKronst = split_lamp_info[4];
-                                String viletKronst = split_lamp_info[5];
-                                String power = split_lamp_info[6];
-                                int stolbNumber = Integer.parseInt(split_lamp_info[7]);
-                                double latitude = Double.parseDouble(split_lamp_info[8]);
-                                double longtitude = Double.parseDouble(split_lamp_info[9]);
-                                String adress = split_lamp_info[10];
-                                String comments = split_lamp_info[11];
-                                String montage = split_lamp_info[12];
-                                int lampsAmount = Integer.parseInt(split_lamp_info[13]);
-                                String lampHeight = split_lamp_info[14];
+                                String roadWidth = split_lamp_info[1];
+                                int roadPolosSelection = Integer.parseInt(split_lamp_info[2]);
+                                String roadLenght = split_lamp_info[3];
+                                int roadOsobennostSelection = Integer.parseInt(split_lamp_info[4]);
+                                String roadOsobennost = split_lamp_info[5];
+                                String roadRasstanovka = split_lamp_info[6];
+                                String oporaHeight = split_lamp_info[7];
+                                String typeSelection = split_lamp_info[8];
+                                String roadDist = split_lamp_info[9];
+                                int typeKronst = Integer.parseInt(split_lamp_info[10]);
+                                String viletKronst = split_lamp_info[11];
+                                String power = split_lamp_info[12];
+                                int stolbNumber = Integer.parseInt(split_lamp_info[13]);
+                                double latitude = Double.parseDouble(split_lamp_info[14]);
+                                double longtitude = Double.parseDouble(split_lamp_info[15]);
+                                String adress = split_lamp_info[16];
+                                String comments = split_lamp_info[17];
+                                String montage = split_lamp_info[18];
+                                int lampsAmount = Integer.parseInt(split_lamp_info[19]);
+                                String lampHeight = split_lamp_info[20];
                                 Lamp lamp = new Lamp();
                                 lamp.type = type;
+                                lamp.roadWidth = roadWidth;
+                                lamp.roadPolosSelection = roadPolosSelection;
+                                lamp.roadLength = roadLenght;
+                                lamp.roadOsobennostSelection = roadOsobennostSelection;
+                                lamp.roadOsobennost = roadOsobennost;
+                                lamp.roadRasstanovka = roadRasstanovka;
                                 lamp.power = power;
                                 lamp.stolbNumber = stolbNumber;
                                 lamp.latitude = latitude;
@@ -204,15 +215,15 @@ public class FileParser {
                                 lamp.adress = adress;
                                 lamp.comments = comments;
                                 lamp.montage = montage;
-                                lamp.lampAmount = lampsAmount;
+                                lamp.lampAmountSelection = lampsAmount;
                                 lamp.lampHeight = lampHeight;
                                 lamp.fromRoadDist = roadDist;
                                 lamp.typeSelection = Integer.parseInt(typeSelection);
-                                lamp.typeKronst = typeKronst;
+                                lamp.typeKronstSelection = typeKronst;
                                 lamp.viletKronst = viletKronst;
                                 lamp.oporaHeight = oporaHeight;
-                                if (split_lamp_info.length > 15) {
-                                    String paths = split_lamp_info[15];
+                                if (split_lamp_info.length > 21) {
+                                    String paths = split_lamp_info[21];
                                     String[] split_lamp_photos = paths.split("!");
                                     for (int i = 0; i < split_lamp_photos.length; i++) {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -226,10 +237,6 @@ public class FileParser {
                             }
                         }
                     }
-                }
-                else {
-                    break;
-                }
                 line = reader.readLine();
             }
             Variables.filePath = path;
@@ -284,7 +291,7 @@ public class FileParser {
                 str2+="%";
                 out.println(str1 + str2);
                 for (Lamp lamp:tp.lamps){
-                    String str11 = "#"+lamp.type+";"+lamp.oporaHeight+";"+lamp.typeSelection+";"+lamp.fromRoadDist+";"+lamp.typeKronst+";"+lamp.viletKronst+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmount+";"+lamp.lampHeight;
+                    String str11 = "#"+lamp.type+";"+lamp.roadWidth+";"+lamp.roadPolosSelection+";"+lamp.roadLength+";"+lamp.roadOsobennostSelection+";"+lamp.roadOsobennost+";"+lamp.roadRasstanovka+";"+lamp.oporaHeight+";"+lamp.typeSelection+";"+lamp.fromRoadDist+";"+lamp.typeKronstSelection+";"+lamp.viletKronst+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmountSelection+";"+lamp.lampHeight;
                     String str22 = ";";
                     if (tp.photoPaths.size() != 0) {
                         for (String str : lamp.photoPaths) {

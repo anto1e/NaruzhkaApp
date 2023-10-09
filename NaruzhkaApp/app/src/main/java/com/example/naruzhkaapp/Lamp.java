@@ -15,16 +15,22 @@ public class Lamp {
     public String comments="";      //Комментарии к светильнику;
     public String montage="";           //Тип монтажа светильника
     public String oporaHeight="0";
-    public int lampAmount = 1;          //Количество светильников на столбе
+    public int lampAmountSelection = 1;          //Количество светильников на столбе
     public String lampHeight="0";
     public String fromRoadDist = "0";
-    public String typeKronst = "";
+    public int typeKronstSelection = 0;
     public String viletKronst = "0";
+    public String roadWidth="";
+    public int roadPolosSelection=0;
+    public String roadLength="";
+    public int roadOsobennostSelection=0;
+    public String roadOsobennost="";
+    public String roadRasstanovka="";
     PlacemarkMapObject placemark = null;        //Иконка на карте
 
     Vector<String> photoPaths = new Vector<String>();       //Вектор путей к фотографиям комнаты
 
-    public Lamp(int typeSelection,String type,String power,double latitude, double longtitude,String adress,String comments,PlacemarkMapObject placemark,int stolbNumber,String montage,int lampAmount, String lampHeight){
+    public Lamp(int typeSelection,String type,String power,double latitude, double longtitude,String adress,String comments,PlacemarkMapObject placemark,int stolbNumber,String montage, String lampHeight){
         this.typeSelection = typeSelection;
         this.type=type;
         this.power = power;
@@ -35,7 +41,6 @@ public class Lamp {
         this.placemark = placemark;
         this.stolbNumber = stolbNumber;
         this.montage = montage;
-        this.lampAmount = lampAmount;
         this.lampHeight = lampHeight;
     }
 

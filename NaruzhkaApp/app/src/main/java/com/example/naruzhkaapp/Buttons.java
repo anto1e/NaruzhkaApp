@@ -36,6 +36,8 @@ public class Buttons {
     public static final int CAMERA_REQUEST_CODE = 102;      //Код доступа к камере
     public static void initBtns(){              //Инициализация кнопок
 
+
+
         Variables.zoomMe.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -129,6 +131,7 @@ public class Buttons {
                 if (!Variables.addTPFlag) {         //Если не активен флаг добавления подстанции
                     if (!Variables.addLampFlag) {           //Если не активен флаг добавления светильника
                         Variables.addLampFlag = true;           //Установка флага в true
+                        disableRemoveLamp();
                         Variables.addLamp.setBackgroundColor(Color.RED);        //Установка цвета кнопки
                     } else {
                         disableAddLamp();           //Иначе, деактивация кнопки
@@ -157,36 +160,38 @@ public class Buttons {
         Variables.removeTpFromList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (Variables.currentTP!=null) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Variables.activity);
-                    builder.setCancelable(true);
-                    builder.setTitle("Удалить");
-                    builder.setMessage("Вы действительно хотите удалить текущую подстанцию?");
-                    builder.setPositiveButton("Удалить",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {        //Если выбрано удалить - удаляем светильник с экрана
-                                    for (Lamp lamp : Variables.currentTP.lamps) {
-                                        Methods.removeLamp(lamp);
+                if (Variables.TPAdded) {
+                    if (Variables.currentTP != null) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Variables.activity);
+                        builder.setCancelable(true);
+                        builder.setTitle("Удалить");
+                        builder.setMessage("Вы действительно хотите удалить текущую подстанцию?");
+                        builder.setPositiveButton("Удалить",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {        //Если выбрано удалить - удаляем светильник с экрана
+                                        for (Lamp lamp : Variables.currentTP.lamps) {
+                                            Methods.removeLamp(lamp);
+                                        }
+                                        Variables.currentTP.lamps.clear();
+                                        Variables.currentTP.placemark.getParent().remove(Variables.currentTP.placemark);
+                                        Variables.tpList.remove(Variables.currentTP);
+                                        Variables.activity.runOnUiThread(() -> {
+                                            Variables.TPList.removeView(Variables.currentTPFolder);
+                                        });
+                                        Variables.currentTPFolder = null;
+                                        Variables.currentTP = null;
+                                        Variables.currentLamp = null;
                                     }
-                                    Variables.currentTP.lamps.clear();
-                                    Variables.currentTP.placemark.getParent().remove(Variables.currentTP.placemark);
-                                    Variables.tpList.remove(Variables.currentTP);
-                                    Variables.activity.runOnUiThread(() -> {
-                                        Variables.TPList.removeView(Variables.currentTPFolder);
-                                    });
-                                    Variables.currentTPFolder = null;
-                                    Variables.currentTP = null;
-                                    Variables.currentLamp=null;
-                                }
-                            });
-                    builder.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {       //Иначе - отменяем удаление
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                                });
+                        builder.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {       //Иначе - отменяем удаление
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
                 }
                 return false;
             }
@@ -311,24 +316,6 @@ public class Buttons {
             }
         });
 
-        Variables.LampTypeKronstEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (Variables.currentLamp!=null){
-                    Variables.currentLamp.typeKronst = String.valueOf(Variables.LampTypeKronstEdit.getText());
-                }
-            }
-        });
 
         Variables.LampViletKronsEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -406,6 +393,83 @@ public class Buttons {
             }
         });
 
+        Variables.RoadWidthEdit.addTextChangedListener(new TextWatcher() {           //Слушатель на изменение типа светильника
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.currentLamp!=null){
+                    Variables.currentLamp.roadWidth= String.valueOf(Variables.RoadWidthEdit.getText());
+                }
+            }
+        });
+
+        Variables.RoadSPolotnaEdit.addTextChangedListener(new TextWatcher() {           //Слушатель на изменение типа светильника
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.currentLamp!=null){
+                    Variables.currentLamp.roadLength= String.valueOf(Variables.RoadSPolotnaEdit.getText());
+                }
+            }
+        });
+
+        Variables.RoadOsobennostEdit.addTextChangedListener(new TextWatcher() {           //Слушатель на изменение типа светильника
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.currentLamp!=null){
+                    Variables.currentLamp.roadOsobennost= String.valueOf(Variables.RoadOsobennostEdit.getText());
+                }
+            }
+        });
+
+        Variables.RoadRasstanovkaEdit.addTextChangedListener(new TextWatcher() {           //Слушатель на изменение типа светильника
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.currentLamp!=null){
+                    Variables.currentLamp.roadRasstanovka= String.valueOf(Variables.RoadRasstanovkaEdit.getText());
+                }
+            }
+        });
+
+
         Variables.LampPowerEdit.addTextChangedListener(new TextWatcher() {           //Слушатель на изменение мощности светильника
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -425,46 +489,8 @@ public class Buttons {
             }
         });
 
-        Variables.LampAmountEdit.addTextChangedListener(new TextWatcher() {     //Слушатель на изменение количества светильников на столбе
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (Variables.currentLamp!=null){
-                    try {
-                        Variables.currentLamp.lampAmount= Integer.parseInt(String.valueOf(Variables.LampAmountEdit.getText()));
-                    }catch (Exception ex){
-
-                    }
-                }
-            }
-        });
-
-        Variables.LampAdressEdit.addTextChangedListener(new TextWatcher() {           //Слушатель на изменение адреса светильника
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (Variables.currentLamp!=null){
-                    Variables.currentLamp.adress= String.valueOf(Variables.LampAdressEdit.getText());
-                }
-            }
-        });
 
         Variables.LampCommentsEdit.addTextChangedListener(new TextWatcher() {           //Слушатель на изменение комментариев к светильнику
             @Override
@@ -501,6 +527,65 @@ public class Buttons {
                 if (Variables.currentLamp!=null){
                     Variables.currentLamp.montage= String.valueOf(Variables.LampMontageEdit.getText());
                 }
+            }
+        });
+
+        Variables.spinPolos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (Variables.currentLamp!=null && Variables.spinPolos.getSelectedItemPosition()!=0){
+                    Variables.currentLamp.roadPolosSelection = Variables.spinPolos.getSelectedItemPosition();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Variables.spinOsobennost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (Variables.currentLamp!=null && Variables.spinOsobennost.getSelectedItemPosition()!=0){
+                    Variables.currentLamp.roadOsobennostSelection = Variables.spinOsobennost.getSelectedItemPosition();
+                    Variables.currentLamp.roadOsobennost = String.valueOf(Variables.spinOsobennost.getSelectedItem());
+                    Variables.RoadOsobennostEdit.setText(String.valueOf(Variables.spinOsobennost.getSelectedItem()));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Variables.spinKronstTypes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (Variables.currentLamp!=null){
+                    Variables.currentLamp.typeKronstSelection = Variables.spinKronstTypes.getSelectedItemPosition();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        Variables.spinLampsAmount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (Variables.currentLamp!=null){
+                    Variables.currentLamp.lampAmountSelection = Variables.spinLampsAmount.getSelectedItemPosition();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -595,6 +680,11 @@ public class Buttons {
                             Variables.currentLamp.power="180Вт";
                             Variables.currentLamp.montage="Консоль";
                             break;
+                        case "LED-200":
+                            Variables.currentLamp.type="Светодиодный";
+                            Variables.currentLamp.power="200Вт";
+                            Variables.currentLamp.montage="Консоль";
+                            break;
                         case "Пр.-35":
                             Variables.currentLamp.type="";
                             Variables.currentLamp.power="35Вт";
@@ -665,7 +755,7 @@ public class Buttons {
 
     static void addTPToList(String name){       //Функция добавления панели подстанции в список
         TextView txt = new TextView(Variables.activity);        //Создание текстового поля
-        txt.setLayoutParams(new ViewGroup.LayoutParams(180, 40));       //Задание размеров
+        txt.setLayoutParams(new ViewGroup.LayoutParams(250, 40));       //Задание размеров
         txt.setText(name);      //Задание текста
         txt.setTextSize(20);        //Задание размера текста
         txt.setBackgroundColor(Color.RED);      //Установка цвета панели подстанции
@@ -677,19 +767,21 @@ public class Buttons {
         txt.setOnTouchListener(new View.OnTouchListener() {     //Слушатель нажатий на панель подстанции
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Methods.disactiveLamp();
-                if (Variables.currentTPFolder!=null){       //Если была предыдущая активная подстанция
-                    Variables.currentTPFolder.setBackgroundColor(Color.WHITE);      //Сброс цвета панели предыдущей активной подстанции
-                }
-                Variables.currentTPFolder = (TextView) v;       //Установка созданной панели подстанции - текущей
-                v.setBackgroundColor(Color.RED);                //Установка цвета панели подстанции
-                for (TP tp:Variables.tpList){           //Поиск подстанции по нажатию на панель подстанции
-                    if (tp.textView == v){
-                        Variables.currentTP = tp;
-                        break;
+                if (Variables.TPAdded) {
+                    Methods.disactiveLamp();
+                    if (Variables.currentTPFolder != null) {       //Если была предыдущая активная подстанция
+                        Variables.currentTPFolder.setBackgroundColor(Color.WHITE);      //Сброс цвета панели предыдущей активной подстанции
                     }
+                    Variables.currentTPFolder = (TextView) v;       //Установка созданной панели подстанции - текущей
+                    v.setBackgroundColor(Color.RED);                //Установка цвета панели подстанции
+                    for (TP tp : Variables.tpList) {           //Поиск подстанции по нажатию на панель подстанции
+                        if (tp.textView == v) {
+                            Variables.currentTP = tp;
+                            break;
+                        }
+                    }
+                    Methods.showCurrentTPInfo();
                 }
-                Methods.showCurrentTPInfo();
                 return false;
             }
         });
@@ -701,7 +793,7 @@ public class Buttons {
 
     static void addTPToListFromFile(TP tp){       //Функция добавления панели подстанции в список
         TextView txt = new TextView(Variables.activity);        //Создание текстового поля
-        txt.setLayoutParams(new ViewGroup.LayoutParams(180, 40));       //Задание размеров
+        txt.setLayoutParams(new ViewGroup.LayoutParams(250, 40));       //Задание размеров
         txt.setText(tp.name);      //Задание текста
         txt.setTextSize(20);        //Задание размера текста
         txt.setBackgroundColor(Color.WHITE);
@@ -709,19 +801,21 @@ public class Buttons {
         txt.setOnTouchListener(new View.OnTouchListener() {     //Слушатель нажатий на панель подстанции
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Methods.disactiveLamp();
-                if (Variables.currentTPFolder!=null){       //Если была предыдущая активная подстанция
-                    Variables.currentTPFolder.setBackgroundColor(Color.WHITE);      //Сброс цвета панели предыдущей активной подстанции
-                }
-                Variables.currentTPFolder = (TextView) v;       //Установка созданной панели подстанции - текущей
-                v.setBackgroundColor(Color.RED);                //Установка цвета панели подстанции
-                for (TP tp:Variables.tpList){           //Поиск подстанции по нажатию на панель подстанции
-                    if (tp.textView == v){
-                        Variables.currentTP = tp;
-                        break;
+                if (Variables.TPAdded) {
+                    Methods.disactiveLamp();
+                    if (Variables.currentTPFolder != null) {       //Если была предыдущая активная подстанция
+                        Variables.currentTPFolder.setBackgroundColor(Color.WHITE);      //Сброс цвета панели предыдущей активной подстанции
                     }
+                    Variables.currentTPFolder = (TextView) v;       //Установка созданной панели подстанции - текущей
+                    v.setBackgroundColor(Color.RED);                //Установка цвета панели подстанции
+                    for (TP tp : Variables.tpList) {           //Поиск подстанции по нажатию на панель подстанции
+                        if (tp.textView == v) {
+                            Variables.currentTP = tp;
+                            break;
+                        }
+                    }
+                    Methods.showCurrentTPInfo();
                 }
-                Methods.showCurrentTPInfo();
                 return false;
             }
         });
