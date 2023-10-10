@@ -171,6 +171,8 @@ public class Methods {
                             setCurrentLamp(null);
                             removeLamp(lamp);
                             lampToDelete = lamp;
+                            Variables.lastOperation="DELETE";
+                            Variables.lastLamp=lamp;
                         }
                     }
                     if (lampToDelete != null) {
@@ -211,28 +213,34 @@ public class Methods {
                 Variables.addTPFlag=false;
                 Variables.TPAdded=true;
             }else if (Variables.addLampFlag){           //Иначе, если активен флаг добавления светильников
-                Lamp lamp = new Lamp();         //Создание светильника
-                lamp.latitude = point.getLatitude();            //Широта местоположения светильника
-                lamp.longtitude = point.getLongitude();             //Долгота местоположения светильника
-                lamp.stolbNumber = Variables.currentTP.currentStolbCount;
-                Variables.currentTP.currentStolbCount++;
-                Methods.getCity(lamp,null, lamp.latitude, lamp.longtitude);         //Получение адреса светильника
-                Variables.currentTP.lamps.add(lamp);            //Добавление светильников к подстанции
-                MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();
-                pointCollection.addTapListener(Methods.placemarkTapListener);
-                PlacemarkMapObject placemark =  pointCollection.addPlacemark(mappoint,
-                        ImageProvider.fromBitmap(Methods.drawLamp(String.valueOf(lamp.stolbNumber),Variables.currentTP.color)));
-                lamp.placemark = placemark;
-                makeLampActive(lamp);
-                placemark.setUserData("LAMP%"+Variables.currentLamp.toString());        //Сохранение данных в метку
-                setCurrentLamp(lamp);
-                showCurrentLampInfo();
-                displayLampsTPAmount(Variables.currentTP);      //Отображение количества светильников текущей подстанции
+                if (Variables.LampAdded && Variables.currentTP!=null) {
+                    Variables.LampAdded = false;
+                    Lamp lamp = new Lamp();         //Создание светильника
+                    lamp.latitude = point.getLatitude();            //Широта местоположения светильника
+                    lamp.longtitude = point.getLongitude();             //Долгота местоположения светильника
+                    lamp.stolbNumber = Variables.currentTP.currentStolbCount;
+                    Variables.currentTP.currentStolbCount++;
+                    Methods.getCity(lamp, null, lamp.latitude, lamp.longtitude);         //Получение адреса светильника
+                    Variables.currentTP.lamps.add(lamp);            //Добавление светильников к подстанции
+                    MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();
+                    pointCollection.addTapListener(Methods.placemarkTapListener);
+                    PlacemarkMapObject placemark = pointCollection.addPlacemark(mappoint,
+                            ImageProvider.fromBitmap(Methods.drawLamp(String.valueOf(lamp.stolbNumber), Variables.currentTP.color)));
+                    lamp.placemark = placemark;
+                    makeLampActive(lamp);
+                    placemark.setUserData("LAMP%" + Variables.currentLamp.toString());        //Сохранение данных в метку
+                    setCurrentLamp(lamp);
+                    showCurrentLampInfo();
+                    displayLampsTPAmount(Variables.currentTP);      //Отображение количества светильников текущей подстанции
+                    Variables.LampAdded=true;
+                    Variables.lastOperation="ADD";
+                    Variables.lastLamp=lamp;
                 /*List<Point> list = new ArrayList<Point>();
                 list.add(point);
                 list.add(new Point(0,0));
                 Polyline polyline = new Polyline(list);
                 Variables.mapview.getMap().getMapObjects().addCollection().addPolyline(polyline);*/
+                }
             }
         }
 
@@ -253,6 +261,7 @@ public class Methods {
     public static void showCurrentTPInfo(){         //Отображение тинформации по текущей подстанции
         Variables.TPNameEdit.setText(Variables.currentTP.name);
         Variables.TPAdressEdit.setText(Variables.currentTP.adress);
+        Variables.TPCommentsEdit.setText(Variables.currentTP.comments);
         displayLampsTPAmount(Variables.currentTP);
         showAllPhotos(Variables.currentTP);
     }

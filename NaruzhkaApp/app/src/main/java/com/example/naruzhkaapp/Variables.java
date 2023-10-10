@@ -31,6 +31,7 @@ public class Variables {
     public static EditText TPCommentsEdit=null;     //Поле комментариев к подстанции
     public static Spinner spinTypes=null;           //Выпадающий список для выбора типа светильника
     public static EditText LampTypeEdit=null;       //Поле ввода типа светильника
+    public static boolean isExporting=false;
     public static EditText LampPowerEdit=null;      //Поле ввода мощности светильника
     public static EditText LampAdressEdit=null;     //Поле ввода адреса светильнкиа
     public static EditText LampCommentsEdit = null;  //Поле ввода комментариев к светильнику
@@ -65,12 +66,17 @@ public class Variables {
     public static LinearLayout TPList;                  //Layout с панелями подстанций
     public static ImageView zoomMe=null;
     public static boolean TPAdded=true;                 //Флаг, обозначающий добавлена ли подстанция
+    public static boolean LampAdded=true;
+    public static String lastOperation="";
+    public static Lamp lastLamp=null;
     public static boolean removeLampFlag=false;             //Флаг удаления светильников
     public static TP currentTP = null;                   //Текущая активная подстанция
     public static Lamp currentLamp=null;                    //Текущий выбранный светильник
     public static ImageView removeTpFromList=null;          //Кнопка удаления подстанции из списка
     public static TextView currentTPFolder=null;            //Текущая активная вкладка с подстанцией
+    public static ImageView loadingImage=null;
     public static ImageView takeTpPic = null;
+    public static ImageView undo=null;
     public static ImageView takeLampPic=null;
     public static GridLayout tpGrid=null;
     public static GridLayout lampGrid=null;
@@ -130,6 +136,8 @@ public class Variables {
         spinKronstTypes = activity.findViewById(R.id.spinKronstTypes);
         spinLampsAmount = activity.findViewById(R.id.spinLampsAmount);
         LampFromRoadDistEdit = activity.findViewById(R.id.LampFromRoadDistEdit);
+        loadingImage=activity.findViewById(R.id.LoadingImage);
+        undo = activity.findViewById(R.id.Undo);
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, lampTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinTypes.setAdapter(adapter);

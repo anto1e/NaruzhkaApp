@@ -369,6 +369,18 @@
                     android:layout_marginLeft="5dp"
                     />
 
+                <ImageView
+                    android:id="@+id/LoadingImage"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginBottom="0dp"
+                    android:layout_margin="5dp"
+                    app:layout_constraintEnd_toStartOf="@id/secondToolbar"
+                    app:layout_constraintBottom_toBottomOf="@id/secondToolbar"
+                    android:visibility="gone"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/loading"/>
+
             </GridLayout>
 
 
@@ -395,7 +407,7 @@
                     android:paddingBottom="250dp"
                     android:layout_height="wrap_content">
                         <GridLayout
-                            android:id="@+id/gridLampInfo"
+                            android:id="@+id/gridLamp"
                             android:columnCount="2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
@@ -538,7 +550,7 @@
                                 android:layout_height="40dp"/>
                         </GridLayout>
                         <GridLayout
-                            android:layout_below="@+id/gridLampInfo"
+                            app:layout_constraintTop_toBottomOf="@+id/gridLamp"
                             android:id="@+id/lampGrid"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

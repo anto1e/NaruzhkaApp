@@ -24,17 +24,51 @@ import androidx.core.content.FileProvider;
 
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.CameraPosition;
+import com.yandex.mapkit.map.MapObjectCollection;
+import com.yandex.mapkit.map.PlacemarkMapObject;
+import com.yandex.runtime.image.ImageProvider;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public class Buttons {
 
     public static final int CAMERA_PERM_CODE = 101;     //Код доступа к камере
     public static final int CAMERA_REQUEST_CODE = 102;      //Код доступа к камере
     public static void initBtns(){              //Инициализация кнопок
+
+        Variables.undo.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (Variables.lastLamp != null) {
+                    if (Objects.equals(Variables.lastOperation, "ADD") && Variables.currentTP!=null && Variables.lastLamp!=null){
+                        Methods.setCurrentLamp(null);
+                        Methods.removeLamp(Variables.lastLamp);
+                        Variables.currentTP.lamps.remove(Variables.lastLamp);
+                        Methods.showCurrentTPInfo();
+                        Variables.currentLamp=null;
+                        Variables.lastLamp=null;
+                        Variables.lastOperation="";
+                    }else if (Objects.equals(Variables.lastOperation, "DELETE") && Variables.currentTP!=null && Variables.lastLamp!=null){
+                        Variables.currentTP.lamps.add(Variables.lastLamp);            //Добавление светильников к подстанции
+                        MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();
+                        pointCollection.addTapListener(Methods.placemarkTapListener);
+                        PlacemarkMapObject placemark = pointCollection.addPlacemark(new Point(Variables.lastLamp.latitude,Variables.lastLamp.longtitude),
+                                ImageProvider.fromBitmap(Methods.drawLamp(String.valueOf(Variables.lastLamp.stolbNumber), Variables.currentTP.color)));
+                        Variables.lastLamp.placemark = placemark;
+                        Methods.makeLampActive(Variables.lastLamp);
+                        Methods.showCurrentLampInfo();
+                        Methods.displayLampsTPAmount(Variables.currentTP);      //Отображение количества светильников текущей подстанции
+                        Variables.lastLamp=null;
+                        Variables.lastOperation="";
+                    }
+                }
+                return false;
+            }
+        });
 
 
 
@@ -66,10 +100,8 @@ public class Buttons {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 try {
-                    ExcelExporter.exportToExel();
-                    Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
-                        Toast.makeText(Variables.activity.getApplicationContext(), "Отчет создан!", Toast.LENGTH_SHORT).show();
-                    });
+                    SaveExcelThread thread = new SaveExcelThread(); //Создаем новый поток для сохранения в Эксель
+                    thread.start();     //Запускаем поток
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -768,6 +800,8 @@ public class Buttons {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (Variables.TPAdded) {
+                    Variables.lastOperation="";
+                    Variables.lastLamp=null;
                     Methods.disactiveLamp();
                     if (Variables.currentTPFolder != null) {       //Если была предыдущая активная подстанция
                         Variables.currentTPFolder.setBackgroundColor(Color.WHITE);      //Сброс цвета панели предыдущей активной подстанции
