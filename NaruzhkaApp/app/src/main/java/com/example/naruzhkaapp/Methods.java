@@ -277,7 +277,7 @@ public class Methods {
             Variables.spinLampsAmount.setSelection(Variables.currentLamp.lampAmountSelection);
             Variables.LampTypeEdit.setText(Variables.currentLamp.type);
         Variables.LampPowerEdit.setText(Variables.currentLamp.power);
-        Variables.LampMontageEdit.setText(Variables.currentLamp.montage);
+        Variables.LampMontageEdit.setSelection(Variables.currentLamp.montageSelection);
         Variables.LampCommentsEdit.setText(Variables.currentLamp.comments);
         Variables.LampHeightEdit.setText(String.valueOf(Variables.currentLamp.lampHeight));
         Variables.LampFromRoadDistEdit.setText(Variables.currentLamp.fromRoadDist);
@@ -296,6 +296,7 @@ public class Methods {
         Variables.currentLamp=null;
         Variables.spinTypes.setSelection(0);
         Variables.spinOsobennost.setSelection(0);
+        Variables.spinRasstanovka.setSelection(0);
         Point mappoint= new Point(lamp.latitude, lamp.longtitude);   //Создание точки на карте
         lamp.placemark.getParent().remove(lamp.placemark);
         MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();
@@ -398,15 +399,17 @@ Variables.mapview.getMap().getMapObjects().addCollection().addPolyline(polyline)
         }
     }
 
-    public static void createNewPhotoRoom(File f, boolean type){     //Создание новой фотографии комнаты(светильника)
+    public static void createNewPhotoRoom(File f, int type){     //Создание новой фотографии комнаты(светильника)
         ImageView view = new ImageView(Variables.activity);
         view.setLayoutParams(new ViewGroup.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, Variables.activity.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, Variables.activity.getResources().getDisplayMetrics())));
         //lay.setBackgroundResource(R.drawable.txtviewborder);
         view.setImageURI(Uri.fromFile(f));
-        if (type){      //Если сфотографирована комната
+        if (type==1){      //Если сфотографирована комната
             Variables.tpGrid.addView(view);}
-        else{   //иначе - светильник
+        else if (type==0){   //иначе - светильник
             Variables.lampGrid.addView(view);
+        }else if (type==2){
+            Variables.roadGrid.addView(view);
         }
     }
 
@@ -414,14 +417,19 @@ Variables.mapview.getMap().getMapObjects().addCollection().addPolyline(polyline)
         Variables.tpGrid.removeAllViews();
         for (String str:tp.photoPaths){
             File f = new File(str);
-            Methods.createNewPhotoRoom(f,true);
+            Methods.createNewPhotoRoom(f,1);
         }
     }
     public static void showLampsAllPhotos(Lamp lamp){       //Отображение всех фотографий светильника
         Variables.lampGrid.removeAllViews();
+        Variables.roadGrid.removeAllViews();
         for (String str:lamp.photoPaths){
             File f = new File(str);
-            Methods.createNewPhotoRoom(f,false);
+            Methods.createNewPhotoRoom(f,0);
+        }
+        for (String str:lamp.roadPhotoPaths){
+            File f = new File(str);
+            Methods.createNewPhotoRoom(f,2);
         }
     }
 }

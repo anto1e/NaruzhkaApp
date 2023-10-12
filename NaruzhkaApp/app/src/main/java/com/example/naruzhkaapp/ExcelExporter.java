@@ -89,7 +89,7 @@ public class ExcelExporter {
                 cell = cells.get("Q" + Integer.toString(rowCount));
                 cell.setValue(lamp.viletKronst);
                 cell = cells.get("O" + Integer.toString(rowCount));
-                cell.setValue(lamp.montage);
+                cell.setValue(Variables.LampMontageEdit.getItemAtPosition(lamp.montageSelection));
                 cell = cells.get("R" + Integer.toString(rowCount));
                 cell.setValue(Variables.spinLampsAmount.getItemAtPosition(lamp.lampAmountSelection));
                 cell = cells.get("T" + Integer.toString(rowCount));

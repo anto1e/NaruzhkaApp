@@ -11,6 +11,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.geometry.Polyline;
 import com.yandex.mapkit.map.PolylineMapObject;
@@ -27,7 +28,7 @@ import java.util.Vector;
 
 public class Variables {
     public static EditText TPNameEdit=null;         //Поле названия подстанции
-    public static EditText LampMontageEdit = null;      //Тип монтажа светильника
+    public static Spinner LampMontageEdit = null;      //Тип монтажа светильника
     public static EditText TPCommentsEdit=null;     //Поле комментариев к подстанции
     public static Spinner spinTypes=null;           //Выпадающий список для выбора типа светильника
     public static EditText LampTypeEdit=null;       //Поле ввода типа светильника
@@ -50,6 +51,7 @@ public class Variables {
     public static EditText RoadRasstanovkaEdit=null;
     public static Spinner spinKronstTypes=null;
     public static Spinner spinLampsAmount=null;
+    public static Spinner spinRasstanovka = null;
 
     public static TextView TPLampsText = null;          //Поле отображение количества светильников подстанции
     public static ImageView saveFile = null;             //Кнопка сохранения файла
@@ -78,9 +80,11 @@ public class Variables {
     public static ImageView takeTpPic = null;
     public static ImageView undo=null;
     public static ImageView takeLampPic=null;
+    public static ImageView takeRoadPic = null;
+    public static GridLayout roadGrid =null;
     public static GridLayout tpGrid=null;
     public static GridLayout lampGrid=null;
-    public static boolean takePhotoFlag=false;
+    public static int takePhotoFlag=0;
     static UserLocationLayer userLocationLayer;    //Метка местоположения пользователя
     public static MapView mapview;              //Карта
     public static Vector<TP> tpList = new Vector<TP>();         //Список подстанций
@@ -92,11 +96,13 @@ public class Variables {
     //Массив цветов для подстанций и светильников
     public static int[] colors = {Color.BLACK,Color.GREEN,Color.BLUE,Color.GRAY,Color.DKGRAY,Color.YELLOW,Color.CYAN,Color.LTGRAY,Color.MAGENTA};
 
-    public static String[] lampTypes = {"-","РТУ-125","РТУ-150","РТУ-250","РКУ-250","РКУ-400","ЖКУ-100","ЖКУ-150","ЖТУ-250","ЖКУ-250","ЖКУ-400","Инд.-120","LED-50","LED-75","LED-100","LED-130","LED-150","LED-180","LED-200","Пр.-35","Пр.-70","Пр.-150","Пр.-300","Пр.-400","Пр.-500","Пр.-1000","BR-250","GS-240"};
+    public static String[] lampTypes = {"-","РТУ-125","РТУ-150","РТУ-250","РКУ-250","РКУ-400","ЖКУ-100","ЖКУ-150","ЖТУ-250","ЖКУ-250","ЖКУ-400","Инд.-120","LED-50","LED-75","LED-100","LED-130","LED-150","LED-180","LED-200","Пр.-35","Пр.-70","Пр.-150","Пр.-300","Пр.-400","Пр.-500","Пр.-1000","BR-250","GS-240","ДРЛ-125","ДРЛ-250","ДРЛ-400","ДНаТ-100","ДНаТ-150","ДНаТ-250","ДНаТ-400"};
     public static String[] polosAmount = {"-","1","2","4","6","8"};
-    public static String[] kronstType = {"1 рожок","2 рожка","3 рожка","4 рожка","5 рожка","6 рожков","7 рожков","8 рожков","9 рожков","10 рожков","11 рожков","12 рожков","13 рожков","14 рожков","15 рожков"};
+    public static String[] kronstType = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
     public static String[] lampsAmount = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
-    public static String[] osobennostArray = {"-","Перекресток","Парк","Памятник","Пешеходный переход"};
+    public static String[] osobennostArray = {"-","Перекресток","Парк","Памятник","Пешеходный переход","Дворовая территория","Велодорожка","Парковка","Круговое движение","Пешехожная дорожка","Проезд","Остановка","Островок безопасности","Разделительная полоса","Боковой проезд","Дворовой проезд"};
+    public static String[] montageTypesArray = {"Консоль","Торшер","Подвесной","Кронштейн"};
+    public static String[] rasstanovkaArray = {"-","Шахматная","Односторонняя"};
 
     public static int currentColor=0;       //Указатель на текущий использующийся цвет
 
@@ -138,6 +144,12 @@ public class Variables {
         LampFromRoadDistEdit = activity.findViewById(R.id.LampFromRoadDistEdit);
         loadingImage=activity.findViewById(R.id.LoadingImage);
         undo = activity.findViewById(R.id.Undo);
+        spinRasstanovka = activity.findViewById(R.id.spinRasstanovka);
+        takeRoadPic = activity.findViewById(R.id.takeRoadPicBtn);
+        roadGrid = activity.findViewById(R.id.roadGrid);
+        Glide.with(Variables.activity)
+                .load(R.drawable.loadinggif)
+                .into(loadingImage);
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, lampTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinTypes.setAdapter(adapter);
@@ -153,6 +165,12 @@ public class Variables {
         adapter = new ArrayAdapter(activity, R.layout.spinner_item, lampsAmount);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinLampsAmount.setAdapter(adapter);
+        adapter = new ArrayAdapter(activity, R.layout.spinner_item, montageTypesArray);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        LampMontageEdit.setAdapter(adapter);
+        adapter = new ArrayAdapter(activity, R.layout.spinner_item, rasstanovkaArray);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinRasstanovka.setAdapter(adapter);
     }
 
 

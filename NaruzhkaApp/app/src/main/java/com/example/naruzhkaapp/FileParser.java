@@ -57,7 +57,7 @@ public class FileParser {
                      str2+="%";
                      out.println(str1 + str2);
                      for (Lamp lamp:tp.lamps){
-                         String str11 = "#"+lamp.type+";"+lamp.roadWidth+";"+lamp.roadPolosSelection+";"+lamp.roadLength+";"+lamp.roadOsobennostSelection+";"+lamp.roadOsobennost+";"+lamp.roadRasstanovka+";"+lamp.oporaHeight+";"+lamp.typeSelection+";"+lamp.fromRoadDist+";"+lamp.typeKronstSelection+";"+lamp.viletKronst+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmountSelection+";"+lamp.lampHeight;
+                         String str11 = "#"+lamp.type+";"+lamp.roadWidth+";"+lamp.roadPolosSelection+";"+lamp.roadLength+";"+lamp.roadOsobennostSelection+";"+lamp.roadOsobennost+";"+lamp.roadRasstanovka+";"+lamp.oporaHeight+";"+lamp.typeSelection+";"+lamp.fromRoadDist+";"+lamp.typeKronstSelection+";"+lamp.viletKronst+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+String.valueOf(lamp.montageSelection)+";"+lamp.lampHeight+";"+lamp.lampAmountSelection;
                          String str22 = ";";
                          if (lamp.photoPaths.size() != 0) {
                              for (String str : lamp.photoPaths) {
@@ -65,6 +65,12 @@ public class FileParser {
                                  str22 += "!";
                              }
                          }
+                             if (lamp.roadPhotoPaths.size()!=0){
+                                 for (String str : lamp.roadPhotoPaths) {
+                                     str22 += str;
+                                     str22 += "!";
+                                 }
+                             }
                          str22+="#";
                          out.println(str11 + str22);
                      }
@@ -98,10 +104,16 @@ public class FileParser {
                     str2+="%";
                     out.println(str1 + str2);
                     for (Lamp lamp:tp.lamps){
-                        String str11 = "#"+lamp.type+";"+lamp.roadWidth+";"+lamp.roadPolosSelection+";"+lamp.roadLength+";"+lamp.roadOsobennostSelection+";"+lamp.roadOsobennost+";"+lamp.roadRasstanovka+";"+lamp.oporaHeight+";"+lamp.typeSelection+";"+lamp.fromRoadDist+";"+lamp.typeKronstSelection+";"+lamp.viletKronst+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmountSelection+";"+lamp.lampHeight;
+                        String str11 = "#"+lamp.type+";"+lamp.roadWidth+";"+lamp.roadPolosSelection+";"+lamp.roadLength+";"+lamp.roadOsobennostSelection+";"+lamp.roadOsobennost+";"+lamp.roadRasstanovka+";"+lamp.oporaHeight+";"+lamp.typeSelection+";"+lamp.fromRoadDist+";"+lamp.typeKronstSelection+";"+lamp.viletKronst+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+String.valueOf(lamp.montageSelection)+";"+lamp.lampHeight+";"+lamp.lampAmountSelection;
                         String str22 = ";";
                         if (lamp.photoPaths.size() != 0) {
                             for (String str : lamp.photoPaths) {
+                                str22 += str;
+                                str22 += "!";
+                            }
+                        }
+                        if (lamp.roadPhotoPaths.size()!=0){
+                            for (String str : lamp.roadPhotoPaths) {
                                 str22 += str;
                                 str22 += "!";
                             }
@@ -124,6 +136,8 @@ public class FileParser {
         Methods.clearAll();
         Variables.currentTP=null;
         Variables.currentLamp=null;
+        Variables.lastLamp=null;
+        Variables.lastOperation="";
         BufferedReader reader;
         try {           //Если открываем в текущей вкладке - очищаем все комнаты текущео этажа
             reader = new BufferedReader(new FileReader(path));
@@ -198,8 +212,8 @@ public class FileParser {
                                 String adress = split_lamp_info[16];
                                 String comments = split_lamp_info[17];
                                 String montage = split_lamp_info[18];
-                                int lampsAmount = Integer.parseInt(split_lamp_info[19]);
-                                String lampHeight = split_lamp_info[20];
+                                int lampsAmount = Integer.parseInt(split_lamp_info[20]);
+                                String lampHeight = split_lamp_info[19];
                                 Lamp lamp = new Lamp();
                                 lamp.type = type;
                                 lamp.roadWidth = roadWidth;
@@ -214,7 +228,7 @@ public class FileParser {
                                 lamp.longtitude = longtitude;
                                 lamp.adress = adress;
                                 lamp.comments = comments;
-                                lamp.montage = montage;
+                                lamp.montageSelection = Integer.parseInt(montage);
                                 lamp.lampAmountSelection = lampsAmount;
                                 lamp.lampHeight = lampHeight;
                                 lamp.fromRoadDist = roadDist;
@@ -227,8 +241,16 @@ public class FileParser {
                                     String[] split_lamp_photos = paths.split("!");
                                     for (int i = 0; i < split_lamp_photos.length; i++) {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                            if (!Objects.equals(split_lamp_photos[i], "#") && Files.exists(Paths.get(split_lamp_photos[i]))) {
-                                                lamp.photoPaths.add(split_lamp_photos[i]);
+                                            String[] tempSplit = split_lamp_photos[i].split("&");
+                                            System.out.println(tempSplit);
+                                            if (tempSplit.length>1){
+                                                if (!Objects.equals(split_lamp_photos[i], "#") && Files.exists(Paths.get(split_lamp_photos[i]))) {
+                                                    lamp.roadPhotoPaths.add(split_lamp_photos[i]);
+                                                }
+                                            }else {
+                                                if (!Objects.equals(split_lamp_photos[i], "#") && Files.exists(Paths.get(split_lamp_photos[i]))) {
+                                                    lamp.photoPaths.add(split_lamp_photos[i]);
+                                                }
                                             }
                                         }
                                     }
@@ -291,7 +313,7 @@ public class FileParser {
                 str2+="%";
                 out.println(str1 + str2);
                 for (Lamp lamp:tp.lamps){
-                    String str11 = "#"+lamp.type+";"+lamp.roadWidth+";"+lamp.roadPolosSelection+";"+lamp.roadLength+";"+lamp.roadOsobennostSelection+";"+lamp.roadOsobennost+";"+lamp.roadRasstanovka+";"+lamp.oporaHeight+";"+lamp.typeSelection+";"+lamp.fromRoadDist+";"+lamp.typeKronstSelection+";"+lamp.viletKronst+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+lamp.montage+";"+lamp.lampAmountSelection+";"+lamp.lampHeight;
+                    String str11 = "#"+lamp.type+";"+lamp.roadWidth+";"+lamp.roadPolosSelection+";"+lamp.roadLength+";"+lamp.roadOsobennostSelection+";"+lamp.roadOsobennost+";"+lamp.roadRasstanovka+";"+lamp.oporaHeight+";"+lamp.typeSelection+";"+lamp.fromRoadDist+";"+lamp.typeKronstSelection+";"+lamp.viletKronst+";"+lamp.power+";"+String.valueOf(lamp.stolbNumber)+";"+String.valueOf(lamp.latitude)+";"+String.valueOf(lamp.longtitude)+";"+lamp.adress+";"+lamp.comments+";"+String.valueOf(lamp.montageSelection)+";"+lamp.lampHeight+";"+lamp.lampAmountSelection;
                     String str22 = ";";
                     if (tp.photoPaths.size() != 0) {
                         for (String str : lamp.photoPaths) {
@@ -299,6 +321,12 @@ public class FileParser {
                             str22 += "!";
                         }
                     }
+                        if (lamp.roadPhotoPaths.size()!=0){
+                            for (String str : lamp.roadPhotoPaths) {
+                                str22 += str;
+                                str22 += "!";
+                            }
+                        }
                     str2+="#";
                     out.println(str11 + str22);
                 }

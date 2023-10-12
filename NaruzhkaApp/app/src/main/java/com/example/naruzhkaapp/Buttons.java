@@ -89,8 +89,8 @@ public class Buttons {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (Variables.currentTP!=null) {
-                    Variables.takePhotoFlag = true;
-                    verifyPermissions(true);
+                    Variables.takePhotoFlag = 1;
+                    verifyPermissions(1);
                 }
                 return false;
             }
@@ -99,11 +99,24 @@ public class Buttons {
         Variables.makeExcel.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                try {
-                    SaveExcelThread thread = new SaveExcelThread(); //Создаем новый поток для сохранения в Эксель
-                    thread.start();     //Запускаем поток
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                if (Variables.tpList.size()>0) {
+                    try {
+                        SaveExcelThread thread = new SaveExcelThread(); //Создаем новый поток для сохранения в Эксель
+                        thread.start();     //Запускаем поток
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                return false;
+            }
+        });
+
+        Variables.takeRoadPic.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (Variables.currentLamp!=null) {
+                    Variables.takePhotoFlag = 2;
+                    verifyPermissions(2);
                 }
                 return false;
             }
@@ -113,8 +126,8 @@ public class Buttons {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (Variables.currentLamp!=null) {
-                    Variables.takePhotoFlag = false;
-                    verifyPermissions(false);
+                    Variables.takePhotoFlag =0;
+                    verifyPermissions(0);
                 }
                 return false;
             }
@@ -543,22 +556,33 @@ public class Buttons {
             }
         });
 
-        Variables.LampMontageEdit.addTextChangedListener(new TextWatcher() {           //Слушатель на изменение комментариев к светильнику
+
+        Variables.spinRasstanovka.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (Variables.currentLamp!=null){
-                    Variables.currentLamp.montage= String.valueOf(Variables.LampMontageEdit.getText());
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (Variables.currentLamp!=null && Variables.spinRasstanovka.getSelectedItemPosition()!=0){
+                    Variables.currentLamp.roadRasstanovka = String.valueOf(Variables.spinRasstanovka.getSelectedItem());
+                    Variables.RoadRasstanovkaEdit.setText(String.valueOf(Variables.spinRasstanovka.getSelectedItem()));
                 }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Variables.LampMontageEdit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (Variables.currentLamp!=null){
+                    Variables.currentLamp.montageSelection= Variables.LampMontageEdit.getSelectedItemPosition();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -630,137 +654,153 @@ public class Buttons {
                         case "РТУ-125":
                             Variables.currentLamp.type="ДРЛ";
                             Variables.currentLamp.power="125Вт";
-                            Variables.currentLamp.montage="Торшер";
+                            Variables.currentLamp.montageSelection=1;
                             break;
                         case "РТУ-150":
                             Variables.currentLamp.type="ДРЛ";
                             Variables.currentLamp.power="150Вт";
-                            Variables.currentLamp.montage="Торшер";
+                            Variables.currentLamp.montageSelection=1;
                             break;
                         case "РТУ-250":
                             Variables.currentLamp.type="ДРЛ";
                             Variables.currentLamp.power="250Вт";
-                            Variables.currentLamp.montage="Торшер";
+                            Variables.currentLamp.montageSelection=1;
                             break;
                         case "РКУ-250":
                             Variables.currentLamp.type="ДРЛ";
                             Variables.currentLamp.power="250Вт";
-                            Variables.currentLamp.montage="Консоль";
+                            Variables.currentLamp.montageSelection=0;
                             break;
                         case "РКУ-400":
                             Variables.currentLamp.type="ДРЛ";
                             Variables.currentLamp.power="400Вт";
-                            Variables.currentLamp.montage="Консоль";
+                            Variables.currentLamp.montageSelection=0;
                             break;
                         case "ЖТУ-250":
                             Variables.currentLamp.type="ДНаТ";
                             Variables.currentLamp.power="250Вт";
-                            Variables.currentLamp.montage="Торшер";
+                            Variables.currentLamp.montageSelection=1;
                             break;
                         case "ЖКУ-100":
                             Variables.currentLamp.type="ДНаТ";
                             Variables.currentLamp.power="100Вт";
-                            Variables.currentLamp.montage="Консоль";
+                            Variables.currentLamp.montageSelection=0;
                             break;
                         case "ЖКУ-150":
                             Variables.currentLamp.type="ДНаТ";
                             Variables.currentLamp.power="150Вт";
-                            Variables.currentLamp.montage="Консоль";
+                            Variables.currentLamp.montageSelection=0;
                             break;
                         case "ЖКУ-250":
                             Variables.currentLamp.type="ДНаТ";
                             Variables.currentLamp.power="250Вт";
-                            Variables.currentLamp.montage="Консоль";
                             break;
                         case "ЖКУ-400":
                             Variables.currentLamp.type="ДНаТ";
                             Variables.currentLamp.power="400Вт";
-                            Variables.currentLamp.montage="Консоль";
                             break;
                         case "Инд.-120":
                             Variables.currentLamp.type="Индукционный";
                             Variables.currentLamp.power="120Вт";
-                            Variables.currentLamp.montage="";
                             break;
                         case "LED-50":
                             Variables.currentLamp.type="Светодиодный";
                             Variables.currentLamp.power="50Вт";
-                            Variables.currentLamp.montage="Консоль";
                             break;
                         case "LED-75":
                             Variables.currentLamp.type="Светодиодный";
                             Variables.currentLamp.power="75Вт";
-                            Variables.currentLamp.montage="Консоль";
                             break;
                         case "LED-100":
                             Variables.currentLamp.type="Светодиодный";
                             Variables.currentLamp.power="100Вт";
-                            Variables.currentLamp.montage="Консоль";
                             break;
                         case "LED-130":
                             Variables.currentLamp.type="Светодиодный";
                             Variables.currentLamp.power="130Вт";
-                            Variables.currentLamp.montage="Консоль";
                             break;
                         case "LED-150":
                             Variables.currentLamp.type="Светодиодный";
                             Variables.currentLamp.power="150Вт";
-                            Variables.currentLamp.montage="Консоль";
                             break;
                         case "LED-180":
                             Variables.currentLamp.type="Светодиодный";
                             Variables.currentLamp.power="180Вт";
-                            Variables.currentLamp.montage="Консоль";
                             break;
                         case "LED-200":
                             Variables.currentLamp.type="Светодиодный";
                             Variables.currentLamp.power="200Вт";
-                            Variables.currentLamp.montage="Консоль";
                             break;
                         case "Пр.-35":
                             Variables.currentLamp.type="";
                             Variables.currentLamp.power="35Вт";
-                            Variables.currentLamp.montage="";
                             break;
                         case "Пр.-70":
                             Variables.currentLamp.type="";
                             Variables.currentLamp.power="70Вт";
-                            Variables.currentLamp.montage="";
                             break;
                         case "Пр.-150":
                             Variables.currentLamp.type="";
                             Variables.currentLamp.power="150Вт";
-                            Variables.currentLamp.montage="";
                             break;
                         case "Пр.-300":
                             Variables.currentLamp.type="";
                             Variables.currentLamp.power="300Вт";
-                            Variables.currentLamp.montage="";
                             break;
                         case "Пр.-400":
                             Variables.currentLamp.type="";
                             Variables.currentLamp.power="400Вт";
-                            Variables.currentLamp.montage="";
                             break;
                         case "Пр.-500":
                             Variables.currentLamp.type="";
                             Variables.currentLamp.power="500Вт";
-                            Variables.currentLamp.montage="";
                             break;
                         case "Пр.-1000":
                             Variables.currentLamp.type="";
                             Variables.currentLamp.power="1000Вт";
-                            Variables.currentLamp.montage="";
                             break;
                         case "BR-250":
                             Variables.currentLamp.type="ГОБО";
                             Variables.currentLamp.power="250Вт";
-                            Variables.currentLamp.montage="";
                             break;
                         case "GS-240":
                             Variables.currentLamp.type="ГОБО";
                             Variables.currentLamp.power="240Вт";
-                            Variables.currentLamp.montage="";
+                            break;
+                        case "ДРЛ-125":
+                            Variables.currentLamp.type="ДРЛ";
+                            Variables.currentLamp.power="125Вт";
+                            Variables.currentLamp.montageSelection = 2;
+                            break;
+                        case "ДРЛ-250":
+                            Variables.currentLamp.type="ДРЛ";
+                            Variables.currentLamp.power="250Вт";
+                            Variables.currentLamp.montageSelection = 2;
+                            break;
+                        case "ДРЛ-400":
+                            Variables.currentLamp.type="ДРЛ";
+                            Variables.currentLamp.power="400Вт";
+                            Variables.currentLamp.montageSelection = 2;
+                            break;
+                        case "ДНаТ-100":
+                            Variables.currentLamp.type="ДНаТ";
+                            Variables.currentLamp.power="100Вт";
+                            Variables.currentLamp.montageSelection = 2;
+                            break;
+                        case "ДНаТ-150":
+                            Variables.currentLamp.type="ДНаТ";
+                            Variables.currentLamp.power="150Вт";
+                            Variables.currentLamp.montageSelection = 2;
+                            break;
+                        case "ДНаТ-250":
+                            Variables.currentLamp.type="ДНаТ";
+                            Variables.currentLamp.power="250Вт";
+                            Variables.currentLamp.montageSelection = 2;
+                            break;
+                        case "ДНаТ-400":
+                            Variables.currentLamp.type="ДНаТ";
+                            Variables.currentLamp.power="400Вт";
+                            Variables.currentLamp.montageSelection = 2;
                             break;
                     }
                 }
@@ -861,7 +901,7 @@ public class Buttons {
 
 
 
-    private static void verifyPermissions(boolean type){       //Получение разрешений на использование камеры
+    private static void verifyPermissions(int type){       //Получение разрешений на использование камеры
         String[] permissions = {android.Manifest.permission.READ_EXTERNAL_STORAGE,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 android.Manifest.permission.CAMERA};
@@ -879,7 +919,7 @@ public class Buttons {
                     CAMERA_PERM_CODE);
         }*/
     }
-    public static void dispatchTakePictureIntent(boolean type) {        //Функция создания изображения
+    public static void dispatchTakePictureIntent(int type) {        //Функция создания изображения
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(Variables.activity.getPackageManager()) != null) {
@@ -902,18 +942,24 @@ public class Buttons {
     }
 
 
-    private static File createImageFile(boolean type) throws IOException {          //Функция создания фотографии
+    private static File createImageFile(int type) throws IOException {          //Функция создания фотографии
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName="temp";
-        if (type) {
+        if (type==1) {
             if (Variables.currentTP != null) {
                 imageFileName = Variables.currentTP.name + "$"+timeStamp;
             }
-        }else{
+        }else if (type==0){
             if (Variables.currentLamp != null) {
                 if (Variables.currentTP!=null)
-                    imageFileName = Variables.currentTP.name + "$Столб " + Variables.currentLamp.stolbNumber + "$" + Variables.currentLamp.type + " " + Variables.currentLamp.power + "$"+timeStamp;
+                    imageFileName = Variables.currentTP.name + "$Столб " + Variables.currentLamp.stolbNumber + "$"+String.valueOf(Variables.spinTypes.getItemAtPosition(Variables.currentLamp.typeSelection))+"$" + Variables.currentLamp.type + " " + Variables.currentLamp.power + "$"+timeStamp;
+            }
+        }else if (type==2){
+            if (Variables.currentLamp != null) {
+                if (Variables.currentTP!=null)
+                    //imageFileName = "Дорога: "+Variables.currentLamp.adress + "&"+timeStamp;
+                    imageFileName = Variables.currentLamp.adress + "&Дорога"+timeStamp;
             }
         }
 //        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -930,12 +976,6 @@ public class Buttons {
             // use directory.mkdirs(); here instead.
         }
         //String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
-        directory = new File(Variables.folderPath + "/" + "NaruzhkaApp/"+Variables.currentTP.name);
-        if (! directory.exists()){
-            directory.mkdir();
-            // If you require it to make the entire directory path including parents,
-            // use directory.mkdirs(); here instead.
-        }
         File storageDir = new File(Variables.folderPath + "/" + "NaruzhkaApp/"+Variables.currentTP.name);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -944,10 +984,12 @@ public class Buttons {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        if (type)
+        if (type==1)
             Variables.currentTP.photoPaths.add(image.getAbsolutePath());
-        else
+        else if (type==0)
             Variables.currentLamp.photoPaths.add(image.getAbsolutePath());
+        else if (type==2)
+            Variables.currentLamp.roadPhotoPaths.add(image.getAbsolutePath());
         return image;
     }
 

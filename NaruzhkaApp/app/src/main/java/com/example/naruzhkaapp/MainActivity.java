@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);     //Установка ориентации на горизонтальную
-        MapKitFactory.setApiKey("a16fa150-b6b4-4c2c-92c6-26979225dad2");            //Ключ доступа к Яндекс-картам
+        MapKitFactory.setApiKey("030045f7-6973-442d-bd55-3499ab70e376");            //Ключ доступа к Яндекс-картам
         MapKitFactory.initialize(this);             //Инициализация Яндекс-карт
         setContentView(R.layout.activity_main);
         Variables.activity = this;
@@ -113,15 +113,18 @@ public class MainActivity extends AppCompatActivity {
             FileParser.loadFile(Variables.filePath);          //Парсим файл
         }else if(requestCode == CAMERA_REQUEST_CODE){      //Если был запрос на использование камеры - сохраняем картинку
             if(resultCode == Activity.RESULT_OK){
-                File f;
-                if (Variables.takePhotoFlag) {
+                File f = null;
+                if (Variables.takePhotoFlag==1) {
                     f = new File(String.valueOf(Variables.currentTP.photoPaths.elementAt(Variables.currentTP.photoPaths.size() - 1)));
-                    Methods.createNewPhotoRoom(f, true);      //Создание мини-изображение в layout помещения
-                }else {
+                    Methods.createNewPhotoRoom(f, 1);      //Создание мини-изображение в layout помещения
+                }else if (Variables.takePhotoFlag==0) {
                     f = new File(String.valueOf(Variables.currentLamp.photoPaths.elementAt(Variables.currentLamp.photoPaths.size() - 1)));
-                    Methods.createNewPhotoRoom(f, false);      //Создание мини-изображение в layout помещения
+                    Methods.createNewPhotoRoom(f, 0);      //Создание мини-изображение в layout помещения
+                }else if (Variables.takePhotoFlag==2){
+                    f = new File(String.valueOf(Variables.currentLamp.roadPhotoPaths.elementAt(Variables.currentLamp.roadPhotoPaths.size() - 1)));
+                    Methods.createNewPhotoRoom(f, 2);      //Создание мини-изображение в layout помещения
                 }
-                Variables.takePhotoFlag=false;
+                Variables.takePhotoFlag=0;
                 Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 Uri contentUri = Uri.fromFile(f);
