@@ -133,6 +133,7 @@ public class FileParser {
     }
 
     public static void loadFile(String path) {
+        Buttons.disableCopyPaste();
         Methods.clearAll();
         Variables.currentTP=null;
         Variables.currentLamp=null;

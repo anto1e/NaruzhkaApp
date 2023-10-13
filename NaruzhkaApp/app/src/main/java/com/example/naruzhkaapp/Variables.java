@@ -85,6 +85,9 @@ public class Variables {
     public static GridLayout tpGrid=null;
     public static GridLayout lampGrid=null;
     public static int takePhotoFlag=0;
+    public static ImageView copyPaste=null;
+    public static boolean copyFlag=false;
+    public static Lamp copiedLamp=null;
     static UserLocationLayer userLocationLayer;    //Метка местоположения пользователя
     public static MapView mapview;              //Карта
     public static Vector<TP> tpList = new Vector<TP>();         //Список подстанций
@@ -100,9 +103,9 @@ public class Variables {
     public static String[] polosAmount = {"-","1","2","4","6","8"};
     public static String[] kronstType = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
     public static String[] lampsAmount = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
-    public static String[] osobennostArray = {"-","Перекресток","Парк","Памятник","Пешеходный переход","Дворовая территория","Велодорожка","Парковка","Круговое движение","Пешехожная дорожка","Проезд","Остановка","Островок безопасности","Разделительная полоса","Боковой проезд","Дворовой проезд"};
+    public static String[] osobennostArray = {"-","Боковой проезд","Велодорожка","Дворовая территория","Дворовой проезд","Круговое движение","Остановка","Островок безопасности","Памятник","Парк","Парковка","Перекресток","Пешеходный переход","Пешехожная дорожка","Проезд","Разделительная полоса"};
     public static String[] montageTypesArray = {"Консоль","Торшер","Подвесной","Кронштейн"};
-    public static String[] rasstanovkaArray = {"-","Шахматная","Односторонняя"};
+    public static String[] rasstanovkaArray = {"-","Шахматная","Односторонняя","Двусторонняя","Подвесная"};
 
     public static int currentColor=0;       //Указатель на текущий использующийся цвет
 
@@ -147,6 +150,7 @@ public class Variables {
         spinRasstanovka = activity.findViewById(R.id.spinRasstanovka);
         takeRoadPic = activity.findViewById(R.id.takeRoadPicBtn);
         roadGrid = activity.findViewById(R.id.roadGrid);
+        copyPaste = activity.findViewById(R.id.copyPaste);
         Glide.with(Variables.activity)
                 .load(R.drawable.loadinggif)
                 .into(loadingImage);

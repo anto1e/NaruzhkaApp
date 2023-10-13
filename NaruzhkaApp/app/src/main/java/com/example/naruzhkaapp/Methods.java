@@ -212,29 +212,72 @@ public class Methods {
                 //////Сброс флагов//////
                 Variables.addTPFlag=false;
                 Variables.TPAdded=true;
-            }else if (Variables.addLampFlag){           //Иначе, если активен флаг добавления светильников
+            }else if (Variables.addLampFlag || Variables.copyFlag){           //Иначе, если активен флаг добавления светильников
                 if (Variables.LampAdded && Variables.currentTP!=null) {
-                    Variables.LampAdded = false;
-                    Lamp lamp = new Lamp();         //Создание светильника
-                    lamp.latitude = point.getLatitude();            //Широта местоположения светильника
-                    lamp.longtitude = point.getLongitude();             //Долгота местоположения светильника
-                    lamp.stolbNumber = Variables.currentTP.currentStolbCount;
-                    Variables.currentTP.currentStolbCount++;
-                    Methods.getCity(lamp, null, lamp.latitude, lamp.longtitude);         //Получение адреса светильника
-                    Variables.currentTP.lamps.add(lamp);            //Добавление светильников к подстанции
-                    MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();
-                    pointCollection.addTapListener(Methods.placemarkTapListener);
-                    PlacemarkMapObject placemark = pointCollection.addPlacemark(mappoint,
-                            ImageProvider.fromBitmap(Methods.drawLamp(String.valueOf(lamp.stolbNumber), Variables.currentTP.color)));
-                    lamp.placemark = placemark;
-                    makeLampActive(lamp);
-                    placemark.setUserData("LAMP%" + Variables.currentLamp.toString());        //Сохранение данных в метку
-                    setCurrentLamp(lamp);
-                    showCurrentLampInfo();
-                    displayLampsTPAmount(Variables.currentTP);      //Отображение количества светильников текущей подстанции
-                    Variables.LampAdded=true;
-                    Variables.lastOperation="ADD";
-                    Variables.lastLamp=lamp;
+                    if (!Variables.copyFlag) {
+                        Variables.LampAdded = false;
+                        Lamp lamp = new Lamp();         //Создание светильника
+                        lamp.latitude = point.getLatitude();            //Широта местоположения светильника
+                        lamp.longtitude = point.getLongitude();             //Долгота местоположения светильника
+                        lamp.stolbNumber = Variables.currentTP.currentStolbCount;
+                        Variables.currentTP.currentStolbCount++;
+                        Methods.getCity(lamp, null, lamp.latitude, lamp.longtitude);         //Получение адреса светильника
+                        Variables.currentTP.lamps.add(lamp);            //Добавление светильников к подстанции
+                        MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();
+                        pointCollection.addTapListener(Methods.placemarkTapListener);
+                        PlacemarkMapObject placemark = pointCollection.addPlacemark(mappoint,
+                                ImageProvider.fromBitmap(Methods.drawLamp(String.valueOf(lamp.stolbNumber), Variables.currentTP.color)));
+                        lamp.placemark = placemark;
+                        makeLampActive(lamp);
+                        placemark.setUserData("LAMP%" + Variables.currentLamp.toString());        //Сохранение данных в метку
+                        setCurrentLamp(lamp);
+                        showCurrentLampInfo();
+                        displayLampsTPAmount(Variables.currentTP);      //Отображение количества светильников текущей подстанции
+                        Variables.LampAdded = true;
+                        Variables.lastOperation = "ADD";
+                        Variables.lastLamp = lamp;
+                    }else{
+                        if (Variables.copiedLamp!=null) {
+                            Variables.LampAdded = false;
+                            Lamp lamp = new Lamp();         //Создание светильника
+                            lamp.latitude = point.getLatitude();            //Широта местоположения светильника
+                            lamp.longtitude = point.getLongitude();             //Долгота местоположения светильника
+                            lamp.stolbNumber = Variables.currentTP.currentStolbCount;
+                            Variables.currentTP.currentStolbCount++;
+                            Methods.getCity(lamp, null, lamp.latitude, lamp.longtitude);         //Получение адреса светильника
+                            Variables.currentTP.lamps.add(lamp);            //Добавление светильников к подстанции
+                            MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();
+                            pointCollection.addTapListener(Methods.placemarkTapListener);
+                            PlacemarkMapObject placemark = pointCollection.addPlacemark(mappoint,
+                                    ImageProvider.fromBitmap(Methods.drawLamp(String.valueOf(lamp.stolbNumber), Variables.currentTP.color)));
+                            lamp.placemark = placemark;
+                            makeLampActive(lamp);
+                            placemark.setUserData("LAMP%" + Variables.currentLamp.toString());        //Сохранение данных в метку
+                            lamp.typeSelection = Variables.copiedLamp.typeSelection;
+                            lamp.type = Variables.copiedLamp.type;
+                            lamp.power = Variables.copiedLamp.power;
+                            lamp.comments = Variables.copiedLamp.comments;
+                            lamp.montageSelection = Variables.copiedLamp.montageSelection;
+                            lamp.oporaHeight = Variables.copiedLamp.oporaHeight;
+                            lamp.lampAmountSelection = Variables.copiedLamp.lampAmountSelection;
+                            lamp.lampHeight = Variables.copiedLamp.lampHeight;
+                            lamp.fromRoadDist = Variables.copiedLamp.fromRoadDist;
+                            lamp.typeKronstSelection = Variables.copiedLamp.typeKronstSelection;
+                            lamp.viletKronst = Variables.copiedLamp.viletKronst;
+                            lamp.roadWidth = Variables.copiedLamp.roadWidth;
+                            lamp.roadPolosSelection = Variables.copiedLamp.roadPolosSelection;
+                            lamp.roadLength = Variables.copiedLamp.roadLength;
+                            lamp.roadOsobennostSelection = Variables.copiedLamp.roadOsobennostSelection;
+                            lamp.roadOsobennost = Variables.copiedLamp.roadOsobennost;
+                            lamp.roadRasstanovka = Variables.copiedLamp.roadRasstanovka;
+                            setCurrentLamp(lamp);
+                            showCurrentLampInfo();
+                            displayLampsTPAmount(Variables.currentTP);      //Отображение количества светильников текущей подстанции
+                            Variables.LampAdded = true;
+                            Variables.lastOperation = "ADD";
+                            Variables.lastLamp = lamp;
+                        }
+                    }
                 /*List<Point> list = new ArrayList<Point>();
                 list.add(point);
                 list.add(new Point(0,0));

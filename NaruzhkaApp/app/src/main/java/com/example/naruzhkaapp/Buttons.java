@@ -40,6 +40,26 @@ public class Buttons {
     public static final int CAMERA_REQUEST_CODE = 102;      //Код доступа к камере
     public static void initBtns(){              //Инициализация кнопок
 
+
+        Variables.copyPaste.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (Variables.currentTP!=null && Variables.currentLamp!=null){
+                    if (!Variables.copyFlag){
+                        disableAddLamp();
+                        disableRemoveLamp();
+                        Variables.copyFlag=true;
+                        Variables.copiedLamp = Variables.currentLamp;
+                        Variables.copyPaste.setBackgroundColor(Color.RED);
+                    }
+                    else{
+                        disableCopyPaste();
+                    }
+                }
+                return false;
+            }
+        });
+
         Variables.undo.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -177,6 +197,7 @@ public class Buttons {
                     if (!Variables.addLampFlag) {           //Если не активен флаг добавления светильника
                         Variables.addLampFlag = true;           //Установка флага в true
                         disableRemoveLamp();
+                        disableCopyPaste();
                         Variables.addLamp.setBackgroundColor(Color.RED);        //Установка цвета кнопки
                     } else {
                         disableAddLamp();           //Иначе, деактивация кнопки
@@ -193,6 +214,7 @@ public class Buttons {
                     if (!Variables.removeLampFlag) {
                         Variables.removeLampFlag = true;
                         disableAddLamp();
+                        disableCopyPaste();
                         Variables.removeLamp.setBackgroundColor(Color.RED);
                     } else {
                         disableRemoveLamp();
@@ -840,6 +862,7 @@ public class Buttons {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (Variables.TPAdded) {
+                    Buttons.disableCopyPaste();
                     Variables.lastOperation="";
                     Variables.lastLamp=null;
                     Methods.disactiveLamp();
@@ -876,6 +899,7 @@ public class Buttons {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (Variables.TPAdded) {
+                    Buttons.disableCopyPaste();
                     Methods.disactiveLamp();
                     if (Variables.currentTPFolder != null) {       //Если была предыдущая активная подстанция
                         Variables.currentTPFolder.setBackgroundColor(Color.WHITE);      //Сброс цвета панели предыдущей активной подстанции
@@ -991,6 +1015,12 @@ public class Buttons {
         else if (type==2)
             Variables.currentLamp.roadPhotoPaths.add(image.getAbsolutePath());
         return image;
+    }
+
+    public static void disableCopyPaste(){
+        Variables.copyFlag=false;
+        Variables.copiedLamp=null;
+        Variables.copyPaste.setBackgroundColor(Color.WHITE);
     }
 
 }
