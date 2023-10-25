@@ -14,9 +14,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.geometry.Polyline;
+import com.yandex.mapkit.map.MapObjectCollection;
+import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.map.PolylineMapObject;
 import com.yandex.mapkit.mapview.MapView;
 import com.yandex.mapkit.user_location.UserLocationLayer;
+import com.yandex.runtime.image.ImageProvider;
 
 import org.w3c.dom.Text;
 
@@ -100,7 +103,7 @@ public class Variables {
     public static int[] colors = {Color.BLACK,Color.GREEN,Color.BLUE,Color.GRAY,Color.DKGRAY,Color.YELLOW,Color.CYAN,Color.LTGRAY,Color.MAGENTA};
 
     public static String[] lampTypes = {"-","РТУ-125","РТУ-150","РТУ-250","РКУ-250","РКУ-400","ЖКУ-100","ЖКУ-150","ЖТУ-250","ЖКУ-250","ЖКУ-400","Инд.-120","LED-50","LED-75","LED-100","LED-130","LED-150","LED-180","LED-200","Пр.-35","Пр.-70","Пр.-150","Пр.-300","Пр.-400","Пр.-500","Пр.-1000","BR-250","GS-240","ДРЛ-125","ДРЛ-250","ДРЛ-400","ДНаТ-100","ДНаТ-150","ДНаТ-250","ДНаТ-400"};
-    public static String[] polosAmount = {"-","1","2","4","6","8"};
+    public static String[] polosAmount = {"-","1","2","4","6","8","3","5","7"};
     public static String[] kronstType = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
     public static String[] lampsAmount = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
     public static String[] osobennostArray = {"-","Боковой проезд","Велодорожка","Дворовая территория","Дворовой проезд","Круговое движение","Остановка","Островок безопасности","Памятник","Парк","Парковка","Перекресток","Пешеходный переход","Пешехожная дорожка","Проезд","Разделительная полоса"};
@@ -188,6 +191,43 @@ public class Variables {
             e.printStackTrace();
 
             return null;
+        }
+    }
+
+
+    public static String getCurrentDate(){
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String currentDateTime = dateFormat.format(new Date()); // Find todays date
+
+            return currentDateTime;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return null;
+        }
+    }
+
+    public static void refreshStolbs(){
+        for (TP tp:tpList){
+            int lampCount=1;
+            for (int i=0;i<tp.lamps.size();i++){
+                tp.lamps.elementAt(i).placemark.getParent().remove(tp.lamps.elementAt(i).placemark);
+                tp.lamps.elementAt(i).stolbNumber=i;
+                lampCount++;
+            }
+            tp.currentStolbCount=lampCount;
+        }
+        //makePlacemarks();
+    }
+    public static void makePlacemarks(){
+        for (TP tp:tpList){
+            for (Lamp lamp:tp.lamps){
+                MapObjectCollection pointCollection = Variables.mapview.getMap().getMapObjects().addCollection();
+                pointCollection.addTapListener(Methods.placemarkTapListener);
+                lamp.placemark = pointCollection.addPlacemark(new Point(lamp.latitude,lamp.longtitude),
+                        ImageProvider.fromBitmap(Methods.drawLamp(String.valueOf(lamp.stolbNumber), Variables.currentTP.color)));
+            }
         }
     }
 }

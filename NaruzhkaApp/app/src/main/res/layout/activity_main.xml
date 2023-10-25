@@ -187,7 +187,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="L полотна:"/>
+                    android:text="L до пред.ОП:"/>
                 <EditText
                     android:id="@+id/RoadSPolotnaEdit"
                     android:textSize="10sp"
@@ -419,7 +419,7 @@
             <ScrollView
                 android:background="@color/white"
                 android:id="@+id/globalScroll"
-                android:layout_width="wrap_content"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/infoLampText"
                 app:layout_constraintStart_toStartOf="parent">

@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);     //Установка ориентации на горизонтальную
-        MapKitFactory.setApiKey("030045f7-6973-442d-bd55-3499ab70e376");            //Ключ доступа к Яндекс-картам
+        MapKitFactory.setApiKey("a16fa150-b6b4-4c2c-92c6-26979225dad2");            //Ключ доступа к Яндекс-картам
         MapKitFactory.initialize(this);             //Инициализация Яндекс-карт
         setContentView(R.layout.activity_main);
         Variables.activity = this;
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         Buttons.initBtns();         //Инициализация кнопок
         Variables.mapview = (MapView)findViewById(R.id.map);        //Отображение карты на экране
         Variables.mapview.getMap().move(new CameraPosition(         //Установка позиции камеры на карте
-                new Point(59.828306, 30.327133),17.0f,0,0
+                new Point(68.970663, 33.074918),17.0f,0,0
                 /* zoom =  17.0f,
                 /* azimuth =  150.0f,
                 /* tilt =  30.0f*/

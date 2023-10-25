@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import com.aspose.cells.Cell;
 import com.aspose.cells.Cells;
 import com.aspose.cells.ChartCollection;
+import com.aspose.cells.Style;
 import com.aspose.cells.Workbook;
 import com.aspose.cells.Worksheet;
 import com.aspose.cells.WorksheetCollection;
@@ -66,35 +67,37 @@ public class ExcelExporter {
                 cell.setValue(lamp.roadWidth);
                 cell = cells.get("F" + Integer.toString(rowCount));
                 cell.setValue(Variables.spinPolos.getItemAtPosition(lamp.roadPolosSelection));
-                cell = cells.get("G" + Integer.toString(rowCount));
+                cell = cells.get("V" + Integer.toString(rowCount));
                 cell.setValue(lamp.roadLength);
                 cell = cells.get("H" + Integer.toString(rowCount));
                 cell.setValue(lamp.roadOsobennost);
                 cell = cells.get("I" + Integer.toString(rowCount));
                 cell.setValue(lamp.roadRasstanovka);
                 cell = cells.get("J" + Integer.toString(rowCount));
-                cell.setValue(lamp.latitude+"/"+lamp.longtitude);
-                cell = cells.get("M" + Integer.toString(rowCount));
-                cell.setValue(lamp.lampHeight);
+                cell.setValue(lamp.latitude);
                 cell = cells.get("K" + Integer.toString(rowCount));
-                cell.setValue(lamp.oporaHeight);
-                cell = cells.get("L" + Integer.toString(rowCount));
-                cell.setValue(lamp.fromRoadDist);
+                cell.setValue(lamp.longtitude);
                 cell = cells.get("N" + Integer.toString(rowCount));
-                cell.setValue(Variables.spinTypes.getItemAtPosition(lamp.typeSelection));
-                cell = cells.get("S" + Integer.toString(rowCount));
-                cell.setValue(lamp.power);
-                cell = cells.get("P" + Integer.toString(rowCount));
-                cell.setValue(Variables.spinKronstTypes.getItemAtPosition(lamp.typeKronstSelection));
-                cell = cells.get("Q" + Integer.toString(rowCount));
-                cell.setValue(lamp.viletKronst);
+                cell.setValue(lamp.lampHeight);
+                cell = cells.get("L" + Integer.toString(rowCount));
+                cell.setValue(lamp.oporaHeight);
+                cell = cells.get("M" + Integer.toString(rowCount));
+                cell.setValue(lamp.fromRoadDist);
                 cell = cells.get("O" + Integer.toString(rowCount));
-                cell.setValue(Variables.LampMontageEdit.getItemAtPosition(lamp.montageSelection));
-                cell = cells.get("R" + Integer.toString(rowCount));
-                cell.setValue(Variables.spinLampsAmount.getItemAtPosition(lamp.lampAmountSelection));
+                cell.setValue(Variables.spinTypes.getItemAtPosition(lamp.typeSelection));
                 cell = cells.get("T" + Integer.toString(rowCount));
-                cell.setValue(lamp.comments);
+                cell.setValue(lamp.power);
+                cell = cells.get("Q" + Integer.toString(rowCount));
+                cell.setValue(Integer.parseInt(String.valueOf(Variables.spinKronstTypes.getItemAtPosition(lamp.typeKronstSelection))));
+                cell = cells.get("R" + Integer.toString(rowCount));
+                cell.setValue(lamp.viletKronst);
+                cell = cells.get("P" + Integer.toString(rowCount));
+                cell.setValue(Variables.LampMontageEdit.getItemAtPosition(lamp.montageSelection));
+                cell = cells.get("S" + Integer.toString(rowCount));
+                cell.setValue(Integer.parseInt(String.valueOf(Variables.spinLampsAmount.getItemAtPosition(lamp.lampAmountSelection))));
                 cell = cells.get("U" + Integer.toString(rowCount));
+                cell.setValue(lamp.comments);
+                cell = cells.get("W" + Integer.toString(rowCount));
                 cell.setValue(tp.comments);
                 rowCount++;
             }
@@ -106,6 +109,9 @@ public class ExcelExporter {
         String file_name=Variables.folderPath + "/" + "/NaruzhkaApp/Otcheti/"+Variables.getCurrentTimeStamp()+";";
         for (TP tp:Variables.tpList){
             file_name+=tp.name+";";
+        }
+        if (file_name.length()>250){
+            file_name = Variables.folderPath + "/" + "/NaruzhkaApp/Otcheti/"+Variables.getCurrentTimeStamp()+";otchet";
         }
         file_name+=".xlsx";
         workbook.save(file_name);

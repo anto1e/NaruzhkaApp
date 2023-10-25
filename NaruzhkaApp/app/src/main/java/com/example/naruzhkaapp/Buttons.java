@@ -48,6 +48,7 @@ public class Buttons {
                     if (!Variables.copyFlag){
                         disableAddLamp();
                         disableRemoveLamp();
+                        //Variables.refreshStolbs();
                         Variables.copyFlag=true;
                         Variables.copiedLamp = Variables.currentLamp;
                         Variables.copyPaste.setBackgroundColor(Color.RED);
